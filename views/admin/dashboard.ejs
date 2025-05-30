@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống Kê Admin</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/css/admin/dashboard.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <ul>
+            <li><a href="/admin/dashboard">📊 Dashboard</a></li>
+            <li><a href="/admin/orders?page=1&pageSize=10">📅 Quản lý đơn hàng</a></li>
+            <li><a href="/admin/services?page=1&pageSize=10">🛠 Quản lý dịch vụ</a></li>
+            <li><a href="/admin/user?page=1&pageSize=10">👥 Quản lý người dùng</a></li>
+            <li><a href="/admin/categories?page=1&pageSize=10">📂 Quản lý danh mục</a></li>
+            <li><a href="/admin/employees?page=1&pageSize=10">👨‍🔧 Quản lý nhân viên</a></li>
+            <li><a href="/admin/coupons?page=1&pageSize=10">🏷 Quản lý mã khuyến mãi</a></li>
+            <li><a href="/admin/bills?page=1&pageSize=10">💵 Quản lý hóa đơn</a></li>
+            <li><a href="/admin/feedback?page=1&pageSize=10">⭐ Quản lý đánh giá</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1>📊 Dashboard</h1>
+        <p style="font-size:18px;color:#026204;margin-bottom:24px;font-weight:500;">Chào mừng bạn đến với trang quản trị <b>Dọn Nhà Vui</b>! Hãy sử dụng menu bên trái để quản lý hệ thống.</p>
+
+        <div class="charts-row">
+            <div class="chart-container">
+                <h2>Doanh Thu Theo Tháng</h2>
+                <canvas id="revenueChart" width="400" height="300"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>Số Lượng Đơn Hàng Theo Trạng Thái</h2>
+                <canvas id="orderStatusChart" width="400" height="300"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>Dịch Vụ Phổ Biến</h2>
+                <canvas id="popularServicesChart" width="400" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/admin/dashboard.js"></script>
+</body>
+</html>

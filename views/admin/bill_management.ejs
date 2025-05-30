@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý Hóa đơn</title>
+  <link rel="stylesheet" href="/css/admin/services_management.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <ul>
+      <li><a href="/admin/dashboard">📊 Dashboard</a></li>
+      <li><a href="/admin/orders?page=1&pageSize=10">📅 Quản lý đơn hàng</a></li>
+      <li><a href="/admin/services?page=1&pageSize=10">🛠 Quản lý dịch vụ</a></li>
+      <li><a href="/admin/user?page=1&pageSize=10">👥 Quản lý người dùng</a></li>
+      <li><a href="/admin/categories?page=1&pageSize=10">📂 Quản lý danh mục</a></li>
+      <li><a href="/admin/employees?page=1&pageSize=10">👨‍🔧 Quản lý nhân viên</a></li>
+      <li><a href="/admin/coupons?page=1&pageSize=10">🏷 Quản lý mã khuyến mãi</a></li>
+      <li><a href="/admin/bills?page=1&pageSize=10">💵 Quản lý hóa đơn</a></li>
+      <li><a href="/admin/feedback?page=1&pageSize=10">⭐ Quản lý đánh giá</a></li>
+    </ul>
+  </div>
+  <div class="container">
+    <h1>Quản lý Hóa đơn</h1>
+    <form method="get" style="display:inline;" id="pageSizeForm">
+      <input type="hidden" name="page" value="<%= page %>">
+      <input type="hidden" name="token" value="<%= token %>">
+      <label for="pageSize">Số dòng/trang:</label>
+      <input type="number" name="pageSize" id="pageSize" min="1" max="100" value="<%= pageSize %>" style="width:60px;">
+    </form>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Order ID</th>
+        <th>Số tiền</th>
+        <th>Trạng thái</th>
+        <th>Ngày</th>
+        <th>Orderid (liên kết)</th>
+      </tr>
+      <% bills.forEach(bill => { %>
+        <tr>
+          <td><%= bill.id %></td>
+          <td><%= bill.order_id %></td>
+          <td><%= bill.amount %></td>
+          <td><%= bill.status %></td>
+          <td><%= bill.date ? bill.date.toLocaleString ? bill.date.toLocaleString() : bill.date : '' %></td>
+          <td><%= bill.Orderid %></td>
+        </tr>
+      <% }) %>
+    </table>
+    <div class="pagination">
+      <% if (page > 1) { %>
+        <a href="?page=<%= page - 1 %>&pageSize=<%= pageSize %>&token=<%= token %>">Trang trước</a>
+      <% } %>
+      <span>Trang <%= page %> / <%= totalPages %></span>
+      <% if (page < totalPages) { %>
+        <a href="?page=<%= page + 1 %>&pageSize=<%= pageSize %>&token=<%= token %>">Trang sau</a>
+      <% } %>
+    </div>
+    <!-- Modal thêm hóa đơn (tương tự các modal khác) -->
+    <!-- ... -->
+  </div>
+  <script>
+    // Tự động submit khi thay đổi giá trị
+    document.getElementById('pageSize').addEventListener('change', function() {
+      document.getElementById('pageSizeForm').submit();
+    });
+    // Hoặc submit khi nhấn Enter
+    document.getElementById('pageSize').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') document.getElementById('pageSizeForm').submit();
+    });
+
+    (function() {
+      function getToken() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('token');
+      }
+      let token = getToken();
+      if (!token) {
+        token = localStorage.getItem('token');
+        if (token) {
+          const params = new URLSearchParams(window.location.search);
+          params.set('token', token);
+          window.location.search = params.toString();
+          return;
+        } else {
+          alert('Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết hạn!');
+          window.location.href = '/login';
+          return;
+        }
+      }
+      // Sửa tất cả các link trong sidebar để giữ token
+      document.querySelectorAll('.sidebar a').forEach(link => {
+        if (link.href && link.href.startsWith(window.location.origin + '/admin/')) {
+          const url = new URL(link.href);
+          url.searchParams.set('token', token);
+          link.href = url.pathname + url.search;
+        }
+      });
+      // Sửa tất cả các link phân trang để giữ token
+      document.querySelectorAll('.pagination a').forEach(link => {
+        const url = new URL(link.href, window.location.origin);
+        url.searchParams.set('token', token);
+        link.href = url.pathname + url.search;
+      });
+    })();
+  </script>
+</body>
+</html>

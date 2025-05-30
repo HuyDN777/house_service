@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký</title>
+    <link rel="stylesheet" href="/css/user/home.css">
+    <link rel="stylesheet" href="/css/user/register.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+      .register-section {margin-top:85px; min-height:700px; display:flex; justify-content:center; align-items:center; background:linear-gradient(180deg,#026204 0%,#268728 100%);}
+      .register-form-box {background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); padding:36px 32px; width:420px; max-width:95vw;}
+      .register-form-box h2 {text-align:center; margin-bottom:18px; color:#026204;}
+      .register-form-box .form-group {margin-bottom:16px;}
+      .register-form-box label {display:block; margin-bottom:6px; font-weight:500; color:#026204;}
+      .register-form-box input[type="text"],
+      .register-form-box input[type="email"],
+      .register-form-box input[type="password"],
+      .register-form-box input[type="file"],
+      .register-form-box input[type="tel"] {
+        width:100%; padding:10px 12px; border:1px solid #b2b2b2; border-radius:6px; font-size:16px; margin-bottom:2px;
+      }
+      .register-form-box input[type="file"] {padding:4px; background:#f8f8f8;}
+      .register-form-box .avatar-preview {display:block; margin:0 auto 12px auto; width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid #eee;}
+      .register-form-box button {width:100%; background:#026204; color:#fff; border:none; border-radius:6px; padding:12px; font-size:18px; font-weight:bold; cursor:pointer; margin-top:8px; transition:background 0.2s;}
+      .register-form-box button:hover {background:#268728;}
+      .register-form-box .form-link {text-align:center; margin-top:10px;}
+      .register-form-box .form-link a {color:#026204; text-decoration:underline;}
+      .register-form-box .form-msg {
+        text-align: center;
+        margin-top: 10px;
+        font-size: 16px;
+      }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="images/user/logo.png" alt="Dọn Nhà Vui" class="logo">
+        <nav class="nav">
+            <a href="/home">TRANG CHỦ</a>
+            <a href="/services">DỊCH VỤ</a>
+            <a href="#contact">LIÊN HỆ</a>
+        </nav>
+        <nav class="login-register" id="loginRegisterNav">
+            <a href="/login" class="login-btn">ĐĂNG NHẬP</a>
+            <a href="/register" class="register-btn">ĐĂNG KÝ</a>
+        </nav>
+        <nav class="user-greeting" id="userGreetingNav" style="display:none;">
+            <a href="/profile" class="profile-link">
+                <img src="" alt="Avatar" id="userAvatar" class="avatar">
+                <span id="greetingText"></span>
+            </a>
+            <a href="/order-history" class="btn" id="orderHistoryBtn">Lịch sử đặt dịch vụ</a>
+            <a href="/admin/dashboard" class="btn" id="adminNavBtn" style="display:none;">Quản trị</a>
+            <form action="/logout" method="post" style="display:inline;">
+                <button type="submit" class="logout-btn" onclick="logout()">Đăng xuất</button>
+            </form>
+        </nav>
+    </header>
+    <main>
+        <section class="register-section">
+            <form id="registerForm" class="register-form-box" enctype="multipart/form-data">
+                <h2>Đăng ký tài khoản</h2>
+                <div class="form-group">
+                  <label for="avatar">Ảnh đại diện</label>
+                  <input type="file" id="avatar" name="avatar" accept="image/*">
+                  <img id="avatarPreview" class="avatar-preview" style="display:none;"/>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                  <label for="username">Tên đăng nhập</label>
+                  <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                  <label for="name">Tên đầy đủ</label>
+                  <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                  <label for="password">Mật khẩu</label>
+                  <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                  <label for="address">Địa chỉ</label>
+                  <input type="text" id="address" name="address">
+                </div>
+                <div class="form-group">
+                  <label for="phone">Số điện thoại</label>
+                  <input type="tel" id="phone" name="phone">
+                </div>
+                <button type="submit">Đăng ký</button>
+                <div id="msg" class="form-msg"></div>
+                <div class="form-link">Đã có tài khoản? <a href="/login" style="text-decoration: none;">Đăng nhập</a></div>
+                <div class="form-link">
+                    <a href="/auth/google">
+                        <button type="button" style="background: #db4437; color: white; margin-top: 10px;">Đăng ký với Google</button>
+                    </a>
+                </div>
+            </form>
+        </section>
+    </main>
+    <section class="footer">
+        <div class="footer-content">
+            <p>SĐT: 0123456789</p>
+            <div class="footer-links">
+                <a href="#">Chính sách</a> | 
+                <a href="#">Điều khoản sử dụng</a> | 
+                <a href="#">Về chúng tôi</a>
+            </div>
+            <p>© 2025 Dịch Vụ Vệ Sinh & Sửa Chữa - All Rights Reserved.</p>
+        </div>
+    </section>
+    <script>
+      // Hiển thị preview avatar
+      document.getElementById('avatar').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if(file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const img = document.getElementById('avatarPreview');
+            img.src = e.target.result;
+            img.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+      document.getElementById('registerForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        let avatar_url = '';
+
+        // 1. Upload avatar nếu có file
+        const avatarFile = form.avatar.files[0];
+        if (avatarFile) {
+            const formData = new FormData();
+            formData.append('image', avatarFile);
+            const uploadRes = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const uploadData = await uploadRes.json();
+            avatar_url = uploadData.imageUrl;
+        }
+
+        // 2. Gửi thông tin đăng ký
+        const data = {
+            name: form.name.value,
+            username: form.username.value,
+            password: form.password.value,
+            address: form.address.value,
+            phone: form.phone.value,
+            email: form.email.value,
+            avatar_url
+        };
+        const res = await fetch('/user/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const msg = await res.json();
+        const messageBox = document.getElementById('msg');
+
+        if (res.ok) {
+            // Hiển thị thông báo thành công
+            messageBox.style.color = 'green';
+            messageBox.innerText = msg.message;
+
+            // Chuyển hướng đến trang đăng nhập sau 2 giây
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+        } else {
+            // Hiển thị thông báo lỗi
+            messageBox.style.color = 'red';
+            messageBox.innerText = msg.error || 'Đăng ký thất bại. Vui lòng thử lại.';
+        }
+    };
+    </script>
+</body>
+</html>

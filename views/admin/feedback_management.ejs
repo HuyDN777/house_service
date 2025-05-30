@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý đánh giá - Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Kodchasan', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    .sidebar {
+      width: 250px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      background: #026204;
+      color: white;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .sidebar h2 {
+      margin: 0 0 20px 0;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar li {
+      margin-bottom: 10px;
+    }
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      display: block;
+      padding: 10px;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+    .sidebar a:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 80px auto 30px;
+      padding: 20px;
+      margin-left: 270px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    .page-title {
+      color: #026204;
+      font-size: 24px;
+      margin: 0;
+    }
+    .feedback-list {
+      display: grid;
+      gap: 20px;
+    }
+    .feedback-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .feedback-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .user-name {
+      font-weight: 500;
+      color: #333;
+    }
+    .rating {
+      color: #ffc107;
+    }
+    .feedback-content {
+      margin: 15px 0;
+      color: #666;
+    }
+    .feedback-date {
+      color: #999;
+      font-size: 14px;
+    }
+    .admin-reply-section {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+    .admin-reply-form {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .reply-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      resize: vertical;
+    }
+    .reply-button {
+      background: #026204;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .reply-button:hover {
+      background: #268728;
+    }
+    .existing-reply {
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+    .existing-reply p {
+      margin: 5px 0;
+      color: #495057;
+    }
+    .existing-reply .admin-name {
+      font-weight: bold;
+      color: #026204;
+    }
+    .no-feedback {
+      text-align: center;
+      color: #666;
+      padding: 30px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .pagination {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .pagination a {
+      display: inline-block;
+      padding: 8px 16px;
+      margin: 0 4px;
+      background: #026204;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .pagination a:hover {
+      background: #268728;
+    }
+    .pagination span {
+      display: inline-block;
+      padding: 8px 16px;
+      margin: 0 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <ul>
+      <li><a href="/admin/dashboard">📊 Dashboard</a></li>
+      <li><a href="/admin/orders?page=1&pageSize=10">📅 Quản lý đơn hàng</a></li>
+      <li><a href="/admin/services?page=1&pageSize=10">🛠 Quản lý dịch vụ</a></li>
+      <li><a href="/admin/user?page=1&pageSize=10">👥 Quản lý người dùng</a></li>
+      <li><a href="/admin/categories?page=1&pageSize=10">📂 Quản lý danh mục</a></li>
+      <li><a href="/admin/employees?page=1&pageSize=10">👨‍🔧 Quản lý nhân viên</a></li>
+      <li><a href="/admin/coupons?page=1&pageSize=10">🏷 Quản lý mã khuyến mãi</a></li>
+      <li><a href="/admin/bills?page=1&pageSize=10">💵 Quản lý hóa đơn</a></li>
+      <li><a href="/admin/feedback?page=1&pageSize=10">⭐ Quản lý đánh giá</a></li>
+    </ul>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <h1 class="page-title">Quản lý đánh giá</h1>
+      <form method="get" style="display:inline;" id="pageSizeForm">
+        <input type="hidden" name="page" value="<%= page %>">
+        <input type="hidden" name="token" value="<%= token %>">
+        <label for="pageSize">Số dòng/trang:</label>
+        <input type="number" name="pageSize" id="pageSize" min="1" max="100" value="<%= pageSize %>" style="width:60px;">
+      </form>
+    </div>
+    
+    <div id="feedbackList" class="feedback-list">
+      <% if (feedback.length === 0) { %>
+        <div class="no-feedback">Chưa có đánh giá nào</div>
+      <% } else { %>
+        <% feedback.forEach(function(feedback) { %>
+          <div class="feedback-card">
+            <div class="feedback-header">
+              <div class="user-info">
+                <img src="<%= feedback.avatar_url || '/images/user/default-avatar.png' %>" alt="Avatar" class="user-avatar">
+                <div>
+                  <div class="user-name"><%= feedback.user_name %></div>
+                  <div class="feedback-date"><%= new Date(feedback.created_at).toLocaleString() %></div>
+                </div>
+              </div>
+              <div class="rating">
+                <% for (let i = 1; i <= 5; i++) { %>
+                  <i class="fas fa-star <%= i <= feedback.rating ? 'text-warning' : '' %>"></i>
+                <% } %>
+              </div>
+            </div>
+            <div class="feedback-content">
+              <%= feedback.comment %>
+            </div>
+            <div class="admin-reply-section">
+              <% if (feedback.admin_reply) { %>
+                <div class="existing-reply">
+                  <p><span class="admin-name">Admin:</span> <%= feedback.admin_reply %></p>
+                </div>
+              <% } else { %>
+                <div class="admin-reply-form">
+                  <textarea class="reply-input" id="reply-<%= feedback.id %>" placeholder="Nhập phản hồi của bạn..."></textarea>
+                  <button class="reply-button" type="button" onclick="submitReply('<%= feedback.id %>')">Gửi phản hồi</button>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        <% }); %>
+      <% } %>
+    </div>
+
+    <div class="pagination">
+      <% if (page > 1) { %>
+        <a href="?page=<%= page - 1 %>&pageSize=<%= pageSize %>&token=<%= token %>">Trang trước</a>
+      <% } %>
+      <span>Trang <%= page %> / <%= totalPages %></span>
+      <% if (page < totalPages) { %>
+        <a href="?page=<%= page + 1 %>&pageSize=<%= pageSize %>&token=<%= token %>">Trang sau</a>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    // Hàm lấy token từ cookies
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    let token = getCookie('token') || '';
+    if (!token) {
+      alert('Bạn cần đăng nhập với tài khoản admin!');
+      window.location.href = '/admin/login';
+    }
+
+    // Hàm tạo sao đánh giá
+    function createStars(rating) {
+      let stars = '';
+      for (let i = 1; i <= 5; i++) {
+        stars += `<i class="fas fa-star ${i <= rating ? 'text-warning' : ''}"></i>`;
+      }
+      return stars;
+    }
+
+    // Hàm tạo form phản hồi
+    function createReplyForm(feedbackId) {
+      return `
+        <div class="admin-reply-form">
+          <textarea class="reply-input" placeholder="Nhập phản hồi của bạn..."></textarea>
+          <button class="reply-button" onclick="submitReply(${feedbackId})">Gửi phản hồi</button>
+        </div>
+      `;
+    }
+
+    // Hàm hiển thị phản hồi hiện tại
+    function showExistingReply(reply) {
+      return `
+        <div class="existing-reply">
+          <p><span class="admin-name">Admin:</span> ${reply}</p>
+        </div>
+      `;
+    }
+
+    // Hàm tạo card feedback
+    function createFeedbackCard(feedback) {
+      return `
+        <div class="feedback-card">
+          <div class="feedback-header">
+            <div class="user-info">
+              <img src="${feedback.user.avatar_url || '/images/user/default-avatar.png'}" 
+                   alt="Avatar" class="user-avatar">
+              <div>
+                <div class="user-name">${feedback.user.name}</div>
+                <div class="feedback-date">${new Date(feedback.created_at).toLocaleString()}</div>
+              </div>
+            </div>
+            <div class="rating">
+              ${createStars(feedback.rating)}
+            </div>
+          </div>
+          <div class="feedback-content">
+            ${feedback.comment}
+          </div>
+          <div class="admin-reply-section">
+            ${feedback.admin_reply ? 
+              showExistingReply(feedback.admin_reply) : 
+              createReplyForm(feedback.id)}
+          </div>
+        </div>
+      `;
+    }
+
+    // Hàm load danh sách feedback
+    async function loadFeedbacks() {
+      try {
+        const response = await fetch('/admin/feedback', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const data = await response.json();
+        
+        const feedbackList = document.getElementById('feedbackList');
+        if (data.feedbacks.length === 0) {
+          feedbackList.innerHTML = '<div class="no-feedback">Chưa có đánh giá nào</div>';
+          return;
+        }
+
+        feedbackList.innerHTML = data.feedbacks.map(feedback => createFeedbackCard(feedback)).join('');
+      } catch (error) {
+        console.error('Error loading feedbacks:', error);
+      }
+    }
+
+    // Hàm gửi phản hồi
+    async function submitReply(feedbackId) {
+      const replyInput = document.getElementById('reply-' + feedbackId);
+      const reply = replyInput.value.trim();
+
+      if (!reply) {
+        alert('Vui lòng nhập phản hồi!');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/admin/feedback/${feedbackId}/reply`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ admin_reply: reply })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          alert('Phản hồi đã được gửi thành công!');
+          window.location.reload();
+        } else {
+          alert(result.error || 'Có lỗi xảy ra khi gửi phản hồi');
+        }
+      } catch (error) {
+        alert('Có lỗi xảy ra khi gửi phản hồi');
+      }
+    }
+
+    // Tự động submit khi thay đổi giá trị
+    document.getElementById('pageSize').addEventListener('change', function() {
+      document.getElementById('pageSizeForm').submit();
+    });
+    // Hoặc submit khi nhấn Enter
+    document.getElementById('pageSize').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') document.getElementById('pageSizeForm').submit();
+    });
+
+    (function() {
+      function getToken() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('token') || getCookie('token');
+      }
+      let token = getToken();
+      if (!token) {
+        alert('Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết hạn!');
+        window.location.href = '/login';
+        return;
+      }
+      // Sửa tất cả các link trong sidebar để giữ token
+      document.querySelectorAll('.sidebar a').forEach(link => {
+        if (link.href && link.href.startsWith(window.location.origin + '/admin/')) {
+          const url = new URL(link.href);
+          url.searchParams.set('token', token);
+          link.href = url.pathname + url.search;
+        }
+      });
+      // Sửa tất cả các link phân trang để giữ token
+      document.querySelectorAll('.pagination a').forEach(link => {
+        const url = new URL(link.href, window.location.origin);
+        url.searchParams.set('token', token);
+        link.href = url.pathname + url.search;
+      });
+    })();
+
+    // Load danh sách feedback khi trang được tải
+    window.onload = loadFeedbacks;
+  </script>
+</body>
+</html>

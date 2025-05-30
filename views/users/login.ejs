@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập</title>
+    <link rel="stylesheet" href="/css/user/home.css">
+    <link rel="stylesheet" href="/css/user/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .login-section {margin-top:85px; min-height:700px; display:flex; justify-content:center; align-items:center; background:linear-gradient(180deg,#026204 0%,#268728 100%);}
+      .login-form-box {background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); padding:36px 32px; width:420px; max-width:95vw;}
+      .login-form-box h2 {text-align:center; margin-bottom:18px; color:#026204;}
+      .login-form-box .form-group {margin-bottom:16px;}
+      .login-form-box label {display:block; margin-bottom:6px; font-weight:500; color:#026204;}
+      .login-form-box input[type="text"],
+      .login-form-box input[type="password"] {
+        width:100%; padding:10px 12px; border:1px solid #b2b2b2; border-radius:6px; font-size:16px; margin-bottom:2px;
+      }
+      .login-form-box button {width:100%; background:#026204; color:#fff; border:none; border-radius:6px; padding:12px; font-size:18px; font-weight:bold; cursor:pointer; margin-top:8px; transition:background 0.2s;}
+      .login-form-box button:hover {background:#268728;}
+      .login-form-box .form-link {text-align:center; margin-top:10px;}
+      .login-form-box .form-link a {color:#026204; text-decoration:underline;}
+      .login-form-box .form-msg {text-align:center; color:#d32f2f; margin-top:8px;}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="images/user/logo.png" alt="Dọn Nhà Vui" class="logo">
+        <nav class="nav">
+            <a href="/home">TRANG CHỦ</a>
+            <a href="/services">DỊCH VỤ</a>
+            <a href="#contact">LIÊN HỆ</a>
+        </nav>
+        <nav class="login-register" id="loginRegisterNav">
+            <a href="/login" class="login-btn">ĐĂNG NHẬP</a>
+            <a href="/register" class="register-btn">ĐĂNG KÝ</a>
+        </nav>
+        <nav class="user-greeting" id="userGreetingNav" style="display:none;">
+            <a href="/profile" class="profile-link">
+                <img src="" alt="Avatar" id="userAvatar" class="avatar">
+                <span id="greetingText"></span>
+            </a>
+            <a href="/order-history" class="btn" id="orderHistoryBtn">Lịch sử đặt dịch vụ</a>
+            <a href="/admin/dashboard" class="btn" id="adminNavBtn" style="display:none;">Quản trị</a>
+            <form action="/logout" method="post" style="display:inline;">
+                <button type="submit" class="logout-btn" onclick="logout()">Đăng xuất</button>
+            </form>
+        </nav>
+    </header>
+    <main>
+        <section class="login-section">
+            <form id="loginForm" class="login-form-box">
+                  <h2>Đăng nhập</h2>
+                  <div class="form-group">
+                      <label for="username">Tên đăng nhập</label>
+                      <input name="username" id="username" type="text" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="password">Mật khẩu</label>
+                      <input name="password" id="password" type="password" required>
+                  </div>
+                  <button type="submit">Đăng nhập</button>
+                  <div id="msg" class="form-msg"></div>
+                  <div class="form-link">
+                      <a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" style="text-decoration: none;">Quên mật khẩu?</a>
+                  </div>
+                  <div class="form-link">Chưa có tài khoản? <a href="/register" style="text-decoration: none;">Đăng ký</a></div>
+                  <div class="form-link">
+                      <a href="/auth/google">
+                          <button type="button" style="background: #db4437; color: white; margin-top: 10px;">Đăng nhập với Google</button>
+                      </a>
+                  </div>
+             </form>
+        </section>
+    </main>
+    <section class="footer">
+        <div class="footer-content">
+            <p>SĐT: 0123456789</p>
+            <div class="footer-links">
+                <a href="#">Chính sách</a> | 
+                <a href="#">Điều khoản sử dụng</a> | 
+                <a href="#">Về chúng tôi</a>
+            </div>
+            <p>© 2025 Dịch Vụ Vệ Sinh & Sửa Chữa - All Rights Reserved.</p>
+        </div>
+    </section>
+
+    <!-- Modal Quên mật khẩu -->
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Quên mật khẩu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="forgotPasswordForm">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Gửi OTP</button>
+                    </form>
+                    <div id="forgotPasswordMsg" class="form-msg mt-3 text-center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nhập OTP -->
+    <div class="modal fade" id="otpModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nhập OTP</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="otpForm">
+                        <div class="form-group">
+                            <label for="otp">OTP</label>
+                            <input type="text" class="form-control" id="otp" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Xác nhận OTP</button>
+                    </form>
+                    <div id="otpMsg" class="form-msg mt-3 text-center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Đặt lại mật khẩu -->
+    <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Đặt lại mật khẩu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="resetPasswordForm">
+                        <div class="form-group">
+                            <label for="newPassword">Mật khẩu mới</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Đặt lại mật khẩu</button>
+                    </form>
+                    <div id="resetPasswordMsg" class="form-msg mt-3 text-center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.getElementById('loginForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const data = {
+          username: form.username.value,
+          password: form.password.value
+        };
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data)
+        });
+        const msg = await res.json();
+        if(msg.token) {
+          localStorage.setItem('token', msg.token);
+          localStorage.setItem('username', msg.username);
+          document.getElementById('msg').innerText = 'Đăng nhập thành công!';
+          setTimeout(() => { 
+            if(msg.role === 'super_admin') window.location.href = '/admin/dashboard';
+            else window.location.href = '/';
+        }, 700);
+        } else {
+          document.getElementById('msg').innerText = msg.error;
+        }
+      }
+
+      // Gửi OTP
+      document.getElementById('forgotPasswordForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        localStorage.setItem('resetPasswordEmail', email); // Lưu email để sử dụng sau nà
+
+        try {
+            const res = await fetch('/api/user/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+
+            const msg = await res.json();
+            const forgotPasswordMsg = document.getElementById('forgotPasswordMsg');
+            if (res.ok) {
+                forgotPasswordMsg.innerText = 'OTP đã được gửi đến email của bạn.';
+                forgotPasswordMsg.style.color = 'green';
+
+                // Hiển thị modal nhập OTP sau khi gửi thành công
+                setTimeout(() => {
+                    const forgotPasswordModal = bootstrap.Modal.getInstance(document.getElementById('forgotPasswordModal'));
+                    forgotPasswordModal.hide();
+                    const otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
+                    otpModal.show();
+                }, 1000);
+            } else {
+                forgotPasswordMsg.innerText = msg.error || 'Đã có lỗi xảy ra.';
+                forgotPasswordMsg.style.color = 'red';
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            document.getElementById('forgotPasswordMsg').innerText = 'Đã có lỗi xảy ra. Vui lòng thử lại.';
+        }
+    };
+
+    // Xác nhận OTP
+    document.getElementById('otpForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const otp = document.getElementById('otp').value;
+        const email = localStorage.getItem('resetPasswordEmail');
+        localStorage.setItem('otp', otp); // Lưu OTP để sử dụng sau này
+
+        try {
+            const res = await fetch('/api/user/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, otp })
+            });
+
+            const msg = await res.json();
+            const otpMsg = document.getElementById('otpMsg');
+            if (res.ok) {
+                otpMsg.innerText = 'OTP hợp lệ. Vui lòng đặt lại mật khẩu.';
+                otpMsg.style.color = 'green';
+
+                // Hiển thị modal đặt lại mật khẩu sau khi OTP hợp lệ
+                setTimeout(() => {
+                    const otpModal = bootstrap.Modal.getInstance(document.getElementById('otpModal'));
+                    otpModal.hide();
+                    const resetPasswordModal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+                    resetPasswordModal.show();
+                }, 1000);
+            } else {
+                otpMsg.innerText = msg.error || 'OTP không hợp lệ.';
+                otpMsg.style.color = 'red';
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            document.getElementById('otpMsg').innerText = 'Đã có lỗi xảy ra. Vui lòng thử lại.';
+        }
+    };
+
+    // Đặt lại mật khẩu
+    document.getElementById('resetPasswordForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const newPassword = document.getElementById('newPassword').value;
+        const email = localStorage.getItem('resetPasswordEmail');
+        const otp = localStorage.getItem('otp'); // Lấy OTP đã lưu
+
+        try {
+            const res = await fetch('/api/user/reset-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, otp, newPassword })
+            });
+
+            const msg = await res.json();
+            const resetPasswordMsg = document.getElementById('resetPasswordMsg');
+            if (res.ok) {
+                resetPasswordMsg.innerText = 'Mật khẩu đã được đặt lại thành công.';
+                resetPasswordMsg.style.color = 'green';
+
+                // Đóng modal sau khi đặt lại mật khẩu thành công
+                setTimeout(() => {
+                    const resetPasswordModal = bootstrap.Modal.getInstance(document.getElementById('resetPasswordModal'));
+                    resetPasswordModal.hide();
+                }, 1000);
+            } else {
+                resetPasswordMsg.innerText = msg.error || 'Đã có lỗi xảy ra.';
+                resetPasswordMsg.style.color = 'red';
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            document.getElementById('resetPasswordMsg').innerText = 'Đã có lỗi xảy ra. Vui lòng thử lại.';
+        }
+    };
+    </script>
+</body>
+</html>

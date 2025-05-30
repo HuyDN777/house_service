@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin cá nhân - Dọn Nhà Vui</title>
+    <link rel="stylesheet" href="/css/user/profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <img src="/images/user/logo.png" alt="Dọn Nhà Vui" class="logo">
+        <nav class="nav">
+            <a href="/home">TRANG CHỦ</a>
+            <a href="/services">DỊCH VỤ</a>
+            <a href="/#contact">LIÊN HỆ</a>
+        </nav>
+        <nav class="user-greeting">
+            <a href="/profile" class="profile-link active">
+                <img src="" alt="Avatar" id="userAvatar" class="avatar">
+                <span id="greetingText"></span>
+            </a>
+            <a href="/order-history" class="btn">Lịch sử đặt dịch vụ</a>
+            <button onclick="logout()" class="logout-btn">Đăng xuất</button>
+        </nav>
+    </header>
+
+    <main class="profile-container">
+        <div class="profile-sidebar">
+            <div class="profile-menu">
+                <button class="menu-item active" data-tab="info">
+                    <i class="fas fa-user"></i>
+                    Thông tin cá nhân
+                </button>
+                <button class="menu-item" data-tab="orders">
+                    <i class="fas fa-history"></i>
+                    Lịch sử đơn hàng
+                </button>
+                <button class="menu-item" data-tab="security">
+                    <i class="fas fa-lock"></i>
+                    Bảo mật
+                </button>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <!-- Thông tin cá nhân -->
+            <div class="tab-content active" id="info">
+                <h2>Thông tin cá nhân</h2>
+                <form id="profileForm" class="profile-form">
+                    <div class="avatar-upload">
+                        <img src="" alt="Avatar" id="profileAvatar">
+                        <label for="avatarInput" class="avatar-upload-btn">
+                            <i class="fas fa-camera"></i>
+                        </label>
+                        <input type="file" id="avatarInput" accept="image/*" hidden>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Họ và tên</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Tên đăng nhập</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Địa chỉ</label>
+                        <textarea id="address" name="address" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cập nhật thông tin</button>
+                </form>
+            </div>
+
+            <!-- Lịch sử đơn hàng -->
+            <div class="tab-content" id="orders">
+                <h2>Lịch sử đơn hàng</h2>
+                <div id="ordersContainer">
+                    <!-- Danh sách đơn hàng sẽ được tải động -->
+                </div>
+                <div class="pagination-controls">
+                    <label for="pageInput">Trang:</label>
+                    <input type="number" id="pageInput" min="1" value="1" onchange="updatePage()" />
+
+                    <label for="pageSizeInput">Số đơn hàng mỗi trang:</label>
+                    <input type="number" id="pageSizeInput" min="1" value="10" onchange="updatePageSize()" />
+
+                    <button onclick="applyPagination()" class="btn btn-primary">Áp dụng</button>
+                </div>
+                <div id="pagination" class="pagination">
+                    <!-- Nút phân trang sẽ được tạo động -->
+                </div>
+            </div>
+
+            <!-- Bảo mật -->
+            <div class="tab-content" id="security">
+                <h2>Bảo mật</h2>
+                <form id="passwordForm" class="profile-form">
+                    <div class="form-group">
+                        <label for="currentPassword">Mật khẩu hiện tại</label>
+                        <input type="password" id="currentPassword" name="currentPassword" autocomplete="current-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Mật khẩu mới</label>
+                        <input type="password" id="newPassword" name="newPassword" autocomplete="new-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Xác nhận mật khẩu mới</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function getCookieValue(name) {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [key, val] = cookie.trim().split('=');
+                if (key === name) return decodeURIComponent(val);
+            }
+            return null;
+        }
+        // Load user information
+        async function loadUserInfo() {
+            // Lấy token từ cookie
+            const token = getCookieValue('token');
+
+            if (!token) return;
+
+            try {
+                const response = await fetch('api/user/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Token không hợp lệ hoặc đã hết hạn');
+                }
+
+                const data = await response.json();
+                
+                if (data.user) {
+                    document.getElementById('name').value = data.user.name;
+                    document.getElementById('username').value = data.user.username;
+                    document.getElementById('email').value = data.user.email;
+                    document.getElementById('phone').value = data.user.phone;
+                    document.getElementById('address').value = data.user.address;
+                    document.getElementById('greetingText').textContent = `Xin chào, ${data.user.name}`;
+                    
+                    if (data.user.avatar_url) {
+                        document.getElementById('userAvatar').src = data.user.avatar_url;
+                        document.getElementById('profileAvatar').src = data.user.avatar_url;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+            }
+        }
+        let currentPage = 1;
+        let currentPageSize = 10;
+        async function fetchOrders(page, pageSize) {
+            try {
+                // Lấy token từ cookie
+                const token = getCookieValue('token');
+
+                if (!token) return;
+                // Gọi API để lấy dữ liệu phân trang
+                const response = await fetch(`/api/user/orders/history?page=${page}&pageSize=${pageSize}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    renderOrders(data.orders);
+                    renderPagination(data.page, data.totalPages);
+                } else {
+                    console.error(data.error || 'Lỗi khi lấy lịch sử đơn hàng');
+                }
+            } catch (error) {
+                console.error('Lỗi khi gọi API:', error);
+            }
+        }
+
+        function renderOrders(orders) {
+            const ordersContainer = document.getElementById('ordersContainer');
+            ordersContainer.innerHTML = ''; 
+
+            if (orders.length === 0) {
+                ordersContainer.innerHTML = '<p>Không có đơn hàng nào.</p>';
+                return;
+            }
+
+            orders.forEach(order => {
+                const orderElement = document.createElement('div');
+                orderElement.classList.add('order-item');
+                orderElement.innerHTML = `
+                    <p><strong>Dịch vụ:</strong> ${order.service_name}</p>
+                    <p><strong>Ngày thực hiện:</strong> ${new Date(order.implementing_date).toLocaleDateString()}</p>
+                    <p><strong>Trạng thái:</strong> ${order.status}</p>
+                    <p><strong>Nhân viên:</strong> ${order.employee_name || 'Chưa phân công'}</p>
+                    <p><strong>Địa chỉ:</strong> ${order.address}</p>
+                    <p><strong>Ghi chú:</strong> ${order.note || 'Không có'}</p>
+                    ${order.status === 'completed' ? `
+                        <div class="feedback-section">
+                            ${order.feedback ? `
+                                <div class="user-feedback">
+                                    <p><strong>Đánh giá của bạn:</strong> ${order.feedback.rating}/5</p>
+                                    <p><strong>Nhận xét:</strong> ${order.feedback.comment}</p>
+                                </div>
+                            ` : `
+                                <div class="feedback-form" data-order-id="${order.id}">
+                                    <div class="rating">
+                                        <i class="fas fa-star" data-rating="1"></i>
+                                        <i class="fas fa-star" data-rating="2"></i>
+                                        <i class="fas fa-star" data-rating="3"></i>
+                                        <i class="fas fa-star" data-rating="4"></i>
+                                        <i class="fas fa-star" data-rating="5"></i>
+                                    </div>
+                                    <textarea class="feedback-input" placeholder="Nhập đánh giá của bạn..."></textarea>
+                                    <button class="submit-feedback" onclick="submitFeedback(${order.id})">Gửi đánh giá</button>
+                                </div>
+                            `}
+                        </div>
+                    ` : ''}
+                `;
+                ordersContainer.appendChild(orderElement);
+            });
+
+            // Thêm sự kiện cho các sao đánh giá
+            document.querySelectorAll('.rating i').forEach(star => {
+                star.addEventListener('click', function () {
+                    const rating = this.dataset.rating;
+                    const stars = this.parentElement.querySelectorAll('i');
+
+                    // Reset tất cả sao
+                    stars.forEach(s => s.classList.remove('active'));
+
+                    // Gán active cho sao <= rating
+                    stars.forEach(s => {
+                        if (Number(s.dataset.rating) <= Number(rating)) {
+                            s.classList.add('active');
+                        }
+                    });
+                });
+            });
+        }
+
+        async function submitFeedback(orderId) {
+            const feedbackForm = document.querySelector(`.feedback-form[data-order-id="${orderId}"]`);
+            if (!feedbackForm) return;
+
+            const rating = feedbackForm.querySelectorAll('.rating i.active').length;
+            const comment = feedbackForm.querySelector('.feedback-input').value;
+
+            if (!rating) {
+                showNotification('Vui lòng chọn số sao đánh giá!', true);
+                return;
+            }
+
+            try {
+                const page = parseInt(document.getElementById('pageInput').value) || 1;
+                const pageSize = parseInt(document.getElementById('pageSizeInput').value) || 10;
+                // Lấy token từ cookie
+                const token = getCookieValue('token');
+
+                if (!token) return;
+                const response = await fetch('/api/feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        order_id: orderId,
+                        rating: parseInt(rating),
+                        comment
+                    })
+                });
+
+                if (response.ok) {
+                    showNotification('Cảm ơn bạn đã đánh giá!');
+                    fetchOrders(page, pageSize);
+                } else {
+                    showNotification('Có lỗi xảy ra khi gửi đánh giá.');
+                }
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                showNotification('Có lỗi xảy ra khi gửi đánh giá.');
+            }
+        }
+        // Hàm hiển thị box thông báo
+        function showNotification(message, isError = false) {
+            const notificationBox = document.getElementById('notificationBox');
+            const notificationMessage = document.getElementById('notificationMessage');
+
+            notificationMessage.textContent = message;
+            notificationBox.style.backgroundColor = isError ? '#f44336' : '#4caf50'; // Đỏ cho lỗi, xanh cho thành công
+            notificationBox.style.display = 'block';
+
+            // Ẩn box sau 4 giây
+            setTimeout(() => {
+                notificationBox.style.display = 'none';
+            }, 4000);
+        }
+
+        function closeNotification() {
+            const notificationBox = document.getElementById('notificationBox');
+            notificationBox.style.display = 'none'; // Ẩn box
+        }
+
+        function renderPagination(currentPage, totalPages) {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = ''; // Xóa nội dung cũ
+
+            if (totalPages <= 1) return; // Không cần phân trang nếu chỉ có 1 trang
+
+            // Nút "Trang trước"
+            if (currentPage > 1) {
+                const prevButton = document.createElement('button');
+                prevButton.innerText = 'Trang trước';
+                prevButton.classList.add('page-button');
+                prevButton.addEventListener('click', () => {
+                    currentPage--;
+                    fetchOrders(currentPage, currentPageSize);
+                });
+                pagination.appendChild(prevButton);
+            }
+
+            // Nút số trang
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.innerText = i;
+                pageButton.classList.add('page-button');
+                if (i === currentPage) {
+                    pageButton.classList.add('active'); // Đánh dấu trang hiện tại
+                }
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    fetchOrders(currentPage, currentPageSize);
+                });
+                pagination.appendChild(pageButton);
+            }
+
+            // Nút "Trang sau"
+            if (currentPage < totalPages) {
+                const nextButton = document.createElement('button');
+                nextButton.innerText = 'Trang sau';
+                nextButton.classList.add('page-button');
+                nextButton.addEventListener('click', () => {
+                    currentPage++;
+                    fetchOrders(currentPage, currentPageSize);
+                });
+                pagination.appendChild(nextButton);
+            }
+            document.getElementById('pageInput').value = currentPage;
+        }
+        // Hàm cập nhật `page` khi người dùng nhập
+        function updatePage() {
+            const pageInput = document.getElementById('pageInput');
+            currentPage = parseInt(pageInput.value) || 1; // Lấy giá trị từ input hoặc mặc định là 1
+        }
+
+        // Hàm cập nhật `pageSize` khi người dùng nhập
+        function updatePageSize() {
+            const pageSizeInput = document.getElementById('pageSizeInput');
+            currentPageSize = parseInt(pageSizeInput.value) || 10; // Lấy giá trị từ input hoặc mặc định là 10
+        }
+
+        // Hàm áp dụng phân trang
+        function applyPagination() {
+            fetchOrders(currentPage, currentPageSize); // Gọi API với giá trị mới
+        }
+        let avatarFile = null; // lưu file đã chọn
+
+        // Khi người dùng chọn file, hiển thị preview
+        document.getElementById('avatarInput').addEventListener('change', (e) => {
+            avatarFile = e.target.files[0];
+            if (!avatarFile) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const previewUrl = event.target.result;
+                document.getElementById('userAvatar').src = previewUrl;
+                document.getElementById('profileAvatar').src = previewUrl;
+            };
+            reader.readAsDataURL(avatarFile);
+        });
+        async function handleProfileUpdate(e) {
+            e.preventDefault();
+
+            const token = getCookieValue('token');
+            if (!token) return;
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            // Kiểm tra xem người dùng có chọn avatar mới không
+            const avatarFile = document.getElementById('avatarInput').files[0];
+
+            if (avatarFile) {
+                try {
+                    const avatarFormData = new FormData();
+                    avatarFormData.append('image', avatarFile);
+
+                    const uploadRes = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: avatarFormData
+                    });
+
+                    const uploadData = await uploadRes.json();
+                    if (uploadData.imageUrl) {
+                        data.avatar_url = uploadData.imageUrl;
+                        // Cập nhật ảnh đại diện trên giao diện
+                        document.getElementById('userAvatar').src = uploadData.imageUrl;
+                        document.getElementById('profileAvatar').src = uploadData.imageUrl;
+                    }
+                } catch (error) {
+                    console.error('Lỗi khi upload ảnh:', error);
+                    alert('Có lỗi xảy ra khi tải lên ảnh đại diện.');
+                    return;
+                }
+            }
+
+            // Gửi dữ liệu cập nhật profile
+            try {
+                const updateRes = await fetch('/api/user/profile-update', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (updateRes.ok) {
+                    alert('Cập nhật thông tin thành công!');
+                    loadUserInfo();
+                } else {
+                    alert('Có lỗi xảy ra khi cập nhật thông tin.');
+                }
+            } catch (error) {
+                console.error('Lỗi khi cập nhật profile:', error);
+                alert('Có lỗi xảy ra khi cập nhật thông tin.');
+            }
+        }
+        document.getElementById('profileForm').addEventListener('submit', handleProfileUpdate);
+        // Handle password change
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (newPassword !== confirmPassword) {
+                alert('Mật khẩu mới không khớp!');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/user/change-password', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({
+                        oldPassword: document.getElementById('currentPassword').value,
+                        newPassword: newPassword
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('Đổi mật khẩu thành công!');
+                    e.target.reset();
+                } else {
+                    alert('Mật khẩu hiện tại không đúng!');
+                }
+            } catch (error) {
+                console.error('Error changing password:', error);
+                alert('Có lỗi xảy ra khi đổi mật khẩu.');
+            }
+        });
+
+
+        // Tab switching
+        document.querySelectorAll('.menu-item').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons and contents
+                document.querySelectorAll('.menu-item').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                button.classList.add('active');
+                const tabId = button.dataset.tab;
+                document.getElementById(tabId).classList.add('active');
+                
+                // Load orders if orders tab is selected
+                if (tabId === 'orders') {
+                    fetchOrders();
+                }
+            });
+        });
+
+        const userId = getCookieValue('userId'); // Lấy userId từ cookie hoặc localStorage
+        const socket = new WebSocket(`ws://localhost:8080?userId=${userId}`);
+
+        socket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+
+            if (data.type === 'order_update') {
+                showNotification(data.message); // Hiển thị thông báo
+            }
+        };
+
+        function showNotification(message) {
+            const notificationBox = document.getElementById('notificationBox');
+            const notificationMessage = document.getElementById('notificationMessage');
+
+            notificationMessage.textContent = message;
+            notificationBox.style.display = 'block';
+
+            setTimeout(() => {
+                notificationBox.style.display = 'none';
+            }, 4000);
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('avatar');
+            window.location.href = '/';
+        }
+
+        window.onload = function() {
+            loadUserInfo();
+            fetchOrders();
+        };
+    </script>
+    <div id="notificationBox" class="notification-box" style="display: none;">
+        <p id="notificationMessage"></p>
+    </div>
+</body>
+</html>

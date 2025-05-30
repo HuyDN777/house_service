@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý đơn hàng</title>
+    <link rel="stylesheet" href="/css/admin/order.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <ul>
+            <li><a href="/admin/dashboard">📊 Dashboard</a></li>
+            <li><a href="/admin/orders?page=1&pageSize=10">📅 Quản lý đơn hàng</a></li>
+            <li><a href="/admin/services?page=1&pageSize=10">🛠 Quản lý dịch vụ</a></li>
+            <li><a href="/admin/user?page=1&pageSize=10">👥 Quản lý người dùng</a></li>
+            <li><a href="/admin/categories?page=1&pageSize=10">📂 Quản lý danh mục</a></li>
+            <li><a href="/admin/employees?page=1&pageSize=10">👨‍🔧 Quản lý nhân viên</a></li>
+            <li><a href="/admin/coupons?page=1&pageSize=10">🏷 Quản lý mã khuyến mãi</a></li>
+            <li><a href="/admin/bills?page=1&pageSize=10">💵 Quản lý hóa đơn</a></li>
+            <li><a href="/admin/feedback?page=1&pageSize=10">⭐ Quản lý đánh giá</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1>Quản lý Đơn hàng</h1>
+        <form method="get" style="display:inline;" id="pageSizeForm">
+            <input type="hidden" name="page" value="<%= page %>">
+            <label for="pageSize">Số dòng/trang:</label>
+            <input type="number" name="pageSize" id="pageSize" min="1" max="100" value="<%= pageSize %>" style="width:60px;">
+        </form>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Khách hàng</th>
+                        <th>Dịch vụ</th>
+                        <th>Nhân viên</th>
+                        <th>Ngày đặt</th>
+                        <th>Ngày thực hiện</th>
+                        <th>Mã khuyến mãi</th>
+                        <th>Giảm (%)</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (orders && orders.length > 0) { %>
+                        <% orders.forEach(order => { %>
+                            <tr>
+                                <td><%= order.id %></td>
+                                <td><%= order.customer_name %></td>
+                                <td><%= order.service_name %></td>
+                                <td><%= order.employee_name %></td>
+                                <td><%= new Date(order.booking_date).toLocaleDateString('vi-VN') %></td>
+                                <td><%= new Date(order.implementing_date).toLocaleDateString('vi-VN') %></td>
+                                <td><%= order.coupon_code || '' %></td>
+                                <td><%= order.coupon_discount || '' %></td>
+                                <td><%= order.status %></td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="9" style="text-align: center;">Không có đơn hàng nào</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination">
+            <% if (page > 1) { %>
+                <a href="?page=<%= page - 1 %>&pageSize=<%= pageSize %>">Trang trước</a>
+            <% } %>
+            <span>Trang <%= page %> / <%= totalPages %></span>
+            <% if (page < totalPages) { %>
+                <a href="?page=<%= page + 1 %>&pageSize=<%= pageSize %>">Trang sau</a>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        // Tự động submit khi thay đổi giá trị
+        document.getElementById('pageSize').addEventListener('change', function() {
+            document.getElementById('pageSizeForm').submit();
+        });
+        // Hoặc submit khi nhấn Enter
+        document.getElementById('pageSize').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') document.getElementById('pageSizeForm').submit();
+        });
+        function editOrder(orderId) {
+            // TODO: Implement edit functionality
+            console.log('Edit order:', orderId);
+        }
+
+        function deleteOrder(orderId) {
+            if (confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')) {
+                // TODO: Implement delete functionality
+                console.log('Delete order:', orderId);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý Nhân viên</title>
+  <link rel="stylesheet" href="/css/admin/services_management.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 400px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .btn-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .image-preview {
+      max-width: 200px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <ul>
+      <li><a href="/admin/dashboard">📊 Dashboard</a></li>
+      <li><a href="/admin/orders?page=1&pageSize=10">📅 Quản lý đơn hàng</a></li>
+      <li><a href="/admin/services?page=1&pageSize=10">🛠 Quản lý dịch vụ</a></li>
+      <li><a href="/admin/user?page=1&pageSize=10">👥 Quản lý người dùng</a></li>
+      <li><a href="/admin/categories?page=1&pageSize=10">📂 Quản lý danh mục</a></li>
+      <li><a href="/admin/employees?page=1&pageSize=10">👨‍🔧 Quản lý nhân viên</a></li>
+      <li><a href="/admin/coupons?page=1&pageSize=10">🏷 Quản lý mã khuyến mãi</a></li>
+      <li><a href="/admin/bills?page=1&pageSize=10">💵 Quản lý hóa đơn</a></li>
+      <li><a href="/admin/feedback?page=1&pageSize=10">⭐ Quản lý đánh giá</a></li>
+    </ul>
+  </div>
+  <div class="container">
+    <h1>Quản lý Nhân viên</h1>
+    <form method="get" style="display:inline;" id="pageSizeForm">
+      <input type="hidden" name="page" value="<%= page %>">
+      <input type="hidden" name="token" value="<%= token %>">
+      <label for="pageSize">Số dòng/trang:</label>
+      <input type="number" name="pageSize" id="pageSize" min="1" max="100" value="<%= pageSize %>" style="width:60px;">
+    </form>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Tên</th>
+        <th>Kinh nghiệm</th>
+        <th>Dịch vụ</th>
+        <th>Ảnh đại diện</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Địa chỉ</th>
+        <th>Hành động</th>
+      </tr>
+      <% employees.forEach(emp => { %>
+        <tr>
+          <td><%= emp.id %></td>
+          <td><%= emp.name %></td>
+          <td><%= emp.experience %> năm</td>
+          <td><%= emp.service_name %></td>
+          <td>
+            <% if (emp.profile_image_url) { %>
+              <a href="<%= emp.profile_image_url %>" target="_blank">Xem ảnh</a>
+            <% } %>
+          </td>
+          <td><%= emp.username %></td>
+          <td><%= emp.password %></td>
+          <td><%= emp.phone %></td>
+          <td><%= emp.email %></td>
+          <td><%= emp.address %></td>
+          <td>
+            <button class="btn btn-delete" onclick="deleteEmployee('<%= emp.id %>')">Xóa</button>
+          </td>
+        </tr>
+      <% }) %>
+    </table>
+    <button class="btn-add" onclick="openAddModal()">Thêm nhân viên</button>
+    <div class="pagination">
+      <% if (page > 1) { %>
+        <a href="?page=<%= page - 1 %>&pageSize=<%= pageSize %>&token=<%= token %>">Trang trước</a>
+      <% } %>
+      <span>Trang <%= page %> / <%= totalPages %></span>
+      <% if (page < totalPages) { %>
+        <a href="?page=<%= page + 1 %>&pageSize=<%= pageSize %>&token=<%= token %>">Trang sau</a>
+      <% } %>
+    </div>
+
+    <!-- Modal thêm nhân viên -->
+    <div id="addEmployeeModal" class="modal">
+      <div class="modal-content">
+        <h2>Thêm Nhân Viên</h2>
+        <form id="addEmployeeForm">
+          <div class="form-group">
+            <label>Tên:</label>
+            <input type="text" name="name" required>
+          </div>
+          <div class="form-group">
+            <label>Kinh nghiệm (năm):</label>
+            <input type="number" name="experience" min="0" required>
+          </div>
+          <div class="form-group">
+            <label>Dịch vụ:</label>
+            <select name="Serviceid" required>
+              <option value="">--Chọn dịch vụ--</option>
+              <% services.forEach(s => { %>
+                <option value="<%= s.id %>"><%= s.name %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Ảnh đại diện:</label>
+            <input type="file" id="profileImage" name="profile_image" accept="image/*" required>
+            <img id="addImagePreview" class="image-preview" style="display: none;">
+          </div>
+          <div class="form-group">
+            <label>Username:</label>
+            <input type="text" name="username" required>
+          </div>
+          <div class="form-group">
+            <label>Password:</label>
+            <input type="password" name="password" required>
+          </div>
+          <div class="form-group">
+            <label>Phone:</label>
+            <input type="text" name="phone">
+          </div>
+          <div class="form-group">
+            <label>Email:</label>
+            <input type="email" name="email">
+          </div>
+          <div class="form-group">
+            <label>Địa chỉ:</label>
+            <input type="text" name="address">
+          </div>
+          <div class="btn-group">
+            <button type="submit" class="btn">Lưu</button>
+            <button type="button" class="btn btn-cancel" onclick="closeModal('addEmployeeModal')">Hủy</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal sửa nhân viên -->
+    <div id="editEmployeeModal" class="modal">
+      <div class="modal-content">
+        <h2>Sửa Nhân Viên</h2>
+        <form id="editEmployeeForm">
+          <input type="hidden" id="editEmployeeId">
+          <div class="form-group">
+            <label>Tên:</label>
+            <input type="text" id="editName" required>
+          </div>
+
+          <div class="form-group">
+            <label>Kinh nghiệm (năm):</label>
+            <input type="number" id="editExperience" min="0" required>
+          </div>
+
+          <div class="form-group">
+            <label>Dịch vụ:</label>
+            <select id="editServiceId" required>
+              <option value="">--Chọn dịch vụ--</option>
+              <% services.forEach(s => { %>
+                <option value="<%= s.id %>"><%= s.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Ảnh đại diện:</label>
+            <input type="file" id="editProfileImage" accept="image/*">
+            <img id="editImagePreview" class="image-preview">
+          </div>
+
+          <div class="btn-group">
+            <button type="submit" class="btn">Lưu</button>
+            <button type="button" class="btn btn-cancel" onclick="closeModal('editEmployeeModal')">Hủy</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mở modal thêm mới
+    function openAddModal() {
+      document.getElementById('addEmployeeModal').style.display = 'flex';
+    }
+
+    // Đóng modal
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+      if (modalId === 'addEmployeeModal') {
+        document.getElementById('addEmployeeForm').reset();
+        document.getElementById('addImagePreview').style.display = 'none';
+      }
+    }
+
+    // Mở modal sửa
+    function editEmployee(id, name, experience, serviceId, imageUrl) {
+      document.getElementById('editEmployeeId').value = id;
+      document.getElementById('editName').value = name;
+      document.getElementById('editExperience').value = experience;
+      document.getElementById('editServiceId').value = serviceId;
+      document.getElementById('editImagePreview').src = imageUrl;
+      document.getElementById('editEmployeeModal').style.display = 'flex';
+    }
+
+    //Xử lý submit form thêm mới
+    document.getElementById('addEmployeeForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const imageFile = form.profile_image.files[0];
+
+      let imageUrl = '';
+      if (imageFile) {
+        // Upload ảnh trước
+        const imageForm = new FormData();
+        imageForm.append('image', imageFile);
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: imageForm
+        });
+        if (!uploadRes.ok) {
+          alert('Lỗi khi upload ảnh');
+          return;
+        }
+        const uploadData = await uploadRes.json();
+        imageUrl = uploadData.imageUrl;
+      }
+
+      // Lấy dữ liệu các trường khác
+      const employeeData = {
+        name: form.name.value,
+        experience: form.experience.value,
+        Serviceid: form.Serviceid.value,
+        profile_image_url: imageUrl,
+        username: form.username.value,
+        password: form.password.value,
+        phone: form.phone.value,
+        email: form.email.value,
+        address: form.address.value
+      };
+
+      // Gửi dữ liệu nhân viên lên server
+      const response = await fetch('/admin/employees/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(employeeData)
+      });
+
+      if (response.ok) {
+        alert('Thêm nhân viên thành công!');
+        window.location.reload();
+      } else {
+        const data = await response.json();
+        alert(data.error || 'Có lỗi xảy ra khi thêm nhân viên!');
+      }
+    });
+   
+
+    // Xử lý submit form sửa
+    document.getElementById('editEmployeeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const employeeId = document.getElementById('editEmployeeId').value;
+      const name = document.getElementById('editName').value;
+      const experience = document.getElementById('editExperience').value;
+      const serviceId = document.getElementById('editServiceId').value;
+      const imageFile = document.getElementById('editProfileImage').files[0];
+
+      try {
+        let imageUrl = document.getElementById('editImagePreview').src;
+        
+        // Nếu có chọn ảnh mới
+        if (imageFile) {
+          const formData = new FormData();
+          formData.append('image', imageFile);
+          
+          const uploadResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData
+          });
+          
+          if (!uploadResponse.ok) {
+            throw new Error('Lỗi khi tải ảnh lên');
+          }
+          
+          const uploadData = await uploadResponse.json();
+          imageUrl = uploadData.imageUrl;
+        }
+
+        const response = await fetch(`/api/employees/${employeeId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name,
+            experience,
+            Serviceid: serviceId,
+            profile_image_url: imageUrl
+          })
+        });
+
+        if (response.ok) {
+          alert('Cập nhật nhân viên thành công!');
+          window.location.reload();
+        } else {
+          const data = await response.json();
+          alert(data.error || 'Có lỗi xảy ra khi cập nhật nhân viên!');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Có lỗi xảy ra!');
+      }
+    });
+
+    // Xử lý xóa nhân viên
+    async function deleteEmployee(employeeId) {
+      if (confirm('Bạn có chắc chắn muốn xóa nhân viên này?')) {
+        try {
+          const response = await fetch(`/admin/employees/${employeeId}`, {
+            method: 'DELETE'
+          });
+
+          if (response.ok) {
+            alert('Xóa nhân viên thành công!');
+            window.location.reload();
+          } else {
+            const data = await response.json();
+            alert(data.error || 'Có lỗi xảy ra khi xóa nhân viên!');
+          }
+        } catch (error) {
+          alert('Có lỗi xảy ra!');
+        }
+      }
+    }
+
+    // Hiển thị preview ảnh khi chọn file
+    document.querySelector('input[name="profile_image"]').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+          alert('File ảnh không được vượt quá 5MB');
+          this.value = '';
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('addImagePreview').src = e.target.result;
+          document.getElementById('addImagePreview').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    document.getElementById('editProfileImage').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+          alert('File ảnh không được vượt quá 5MB');
+          this.value = '';
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('editImagePreview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Tự động submit khi thay đổi giá trị
+    document.getElementById('pageSize').addEventListener('change', function() {
+      document.getElementById('pageSizeForm').submit();
+    });
+    // Hoặc submit khi nhấn Enter
+    document.getElementById('pageSize').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') document.getElementById('pageSizeForm').submit();
+    });
+
+    (function() {
+      function getToken() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('token');
+      }
+      let token = getToken();
+      if (!token) {
+        token = localStorage.getItem('token');
+        if (token) {
+          const params = new URLSearchParams(window.location.search);
+          params.set('token', token);
+          window.location.search = params.toString();
+          return;
+        } else {
+          alert('Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết hạn!');
+          window.location.href = '/login';
+          return;
+        }
+      }
+      // Sửa tất cả các link trong sidebar để giữ token
+      document.querySelectorAll('.sidebar a').forEach(link => {
+        if (link.href && link.href.startsWith(window.location.origin + '/admin/')) {
+          const url = new URL(link.href);
+          url.searchParams.set('token', token);
+          link.href = url.pathname + url.search;
+        }
+      });
+      // Sửa tất cả các link phân trang để giữ token
+      document.querySelectorAll('.pagination a').forEach(link => {
+        const url = new URL(link.href, window.location.origin);
+        url.searchParams.set('token', token);
+        link.href = url.pathname + url.search;
+      });
+    })();
+  </script>
+</body>
+</html>

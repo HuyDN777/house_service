@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h2 class="text-center">Đăng nhập nhân viên</h2>
+        <form id="loginForm" class="mt-4">
+            <div class="mb-3">
+                <label for="username" class="form-label">Tên đăng nhập</label>
+                <input type="text" class="form-control" id="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Mật khẩu</label>
+                <input type="password" class="form-control" id="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+        </form>
+        <div id="errorMessage" class="text-danger mt-3" style="display: none;">Tên đăng nhập hoặc mật khẩu không đúng.</div>
+        <!-- Button trigger modal -->
+        <div class="text-center mt-3">
+            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
+                Quên mật khẩu?
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal Quên mật khẩu -->
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Quên mật khẩu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="forgotPasswordForm">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Gửi OTP</button>
+                    </form>
+                    <form id="resetPasswordForm" style="display: none;">
+                        <div class="mb-3">
+                            <label for="otp" class="form-label">OTP</label>
+                            <input type="text" class="form-control" id="otp" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Đặt lại mật khẩu</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/employee/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.cookie = `token=${data.token}; path=/;`;
+                    window.location.href = '/employee'; // Chuyển hướng đến trang nhân viên
+                } else {
+                    document.getElementById('errorMessage').style.display = 'block';
+                }
+            } catch (err) {
+                console.error('Error logging in:', err);
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        });
+
+        // Xử lý sự kiện gửi form quên mật khẩu
+        document.getElementById('forgotPasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+
+            try {
+                const response = await fetch('/api/employee/forgot-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                if (response.ok) {
+                    alert('Đã gửi OTP đến email của bạn.');
+                    localStorage.setItem('resetPasswordEmail', email);
+                    document.getElementById('forgotPasswordForm').style.display = 'none';
+                    document.getElementById('resetPasswordForm').style.display = 'block';
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.message || 'Đã có lỗi xảy ra');
+                }
+            } catch (err) {
+                console.error('Error sending OTP:', err);
+                alert('Đã có lỗi xảy ra. Vui lòng thử lại.');
+            }
+        });
+
+        // Xử lý sự kiện gửi form đặt lại mật khẩu
+        document.getElementById('resetPasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const otp = document.getElementById('otp').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const email = localStorage.getItem('resetPasswordEmail');
+            if (!email) {
+                alert('Không tìm thấy email. Vui lòng thử lại từ bước Quên mật khẩu.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/employee/reset-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, otp, newPassword })
+                });
+
+                if (response.ok) {
+                    alert('Mật khẩu đã được đặt lại thành công. Bạn có thể đăng nhập bằng mật khẩu mới.');
+                    var myModalEl = document.getElementById('forgotPasswordModal');
+                    var modal = bootstrap.Modal.getInstance(myModalEl);
+                    modal.hide();
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.message || 'Đã có lỗi xảy ra khi đặt lại mật khẩu.');
+                }
+            } catch (err) {
+                console.error('Error resetting password:', err);
+                alert('Đã có lỗi xảy ra. Vui lòng thử lại.');
+            }
+        });
+    </script>
+</body>
+</html>

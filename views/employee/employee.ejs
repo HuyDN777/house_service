@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-light bg-white shadow-sm mb-4">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">Hệ thống nhân viên</span>
+            <div class="d-flex align-items-center">
+                <img src="<%= employee.profile_image_url || 'https://via.placeholder.com/40' %>" alt="Avatar" class="avatar me-2" onclick="showProfile()">
+                <span class="me-3" onclick="showProfile()" style="cursor: pointer;">Xin chào, <%= employee.name %></span>
+                <button class="btn btn-warning btn-sm ms-3" onclick="showChangePasswordModal()">Đổi mật khẩu</button>
+                <button class="btn btn-danger btn-sm ms-3" onclick="logout()">Đăng xuất</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h4>Đơn hàng của bạn</h4>
+        <table class="table table-bordered" id="ordersTable">
+            <thead>
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Khách hàng</th>
+                    <th>Dịch vụ</th>
+                    <th>Ngày thực hiện</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="ordersBody"></tbody>
+        </table>
+    </div>
+
+    <!-- Modal Thông tin cá nhân -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thông tin cá nhân</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="profileForm">
+                        <div class="text-center mb-3">
+                            <img id="avatarPreview" src="<%= employee.profile_image_url || 'https://via.placeholder.com/100' %>" alt="Avatar" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                            <input type="file" id="avatarInput" class="form-control mt-2" accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Tên</label>
+                            <input type="text" class="form-control" id="name" value="<%= employee.name %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" value="<%= employee.username %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" value="<%= employee.email %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Số điện thoại</label>
+                            <input type="text" class="form-control" id="phone" value="<%= employee.phone %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Địa chỉ</label>
+                            <input type="text" class="form-control" id="address" value="<%= employee.address %>">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Cập nhật</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Đổi mật khẩu -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Đổi mật khẩu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="changePasswordForm">
+                        <div class="mb-3">
+                            <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
+                            <input type="password" class="form-control" id="currentPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Cập nhật</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        async function loadOrders() {
+            const response = await fetch('/api/employee/orders', {
+                headers: { 'Authorization': `Bearer ${document.cookie.split('=')[1]}` }
+            });
+            if (!response.ok) {
+                alert('Không thể tải đơn hàng. Vui lòng thử lại sau.');
+                return;
+            }
+            const data = await response.json();
+            const tbody = document.getElementById('ordersBody');
+            tbody.innerHTML = '';
+            data.orders.forEach(order => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${order.id}</td>
+                        <td>${order.customer_name}</td>
+                        <td>${order.service_name}</td>
+                        <td>${order.implementing_date}</td>
+                        <td>${order.status}</td>
+                        <td>
+                            ${order.status === 'in_progress' ? 
+                                `<button class="btn btn-success btn-sm" onclick="completeOrder(${order.id})">Hoàn thành</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+        document.addEventListener('DOMContentLoaded', loadOrders);
+
+        async function completeOrder(orderId) {
+            if (!confirm('Bạn chắc chắn muốn đánh dấu hoàn thành đơn này?')) return;
+            const res = await fetch(`/api/orders/${orderId}/complete`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${document.cookie.split('=')[1]}` }
+            });
+            const data = await res.json();
+            alert(data.message);
+            loadOrders();
+        }
+
+        function logout() {
+            document.cookie = 'token=; Max-Age=0; path=/;';
+            window.location.href = '/employee';
+        }
+
+        async function showProfile() {
+            try {
+                const res = await fetch('/api/employee/profile', {
+                    headers: { 'Authorization': `Bearer ${document.cookie.split('=')[1]}` }
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    const employee = data.employee;
+
+                    // Cập nhật thông tin trong modal
+                    document.getElementById('avatarPreview').src = `${employee.profile_image_url}?t=${Date.now()}`;
+                    document.getElementById('name').value = employee.name;
+                    document.getElementById('username').value = employee.username;
+                    document.getElementById('email').value = employee.email;
+                    document.getElementById('phone').value = employee.phone;
+                    document.getElementById('address').value = employee.address;
+
+                    // Hiển thị modal
+                    new bootstrap.Modal(document.getElementById('profileModal')).show();
+                } else {
+                    alert('Không thể tải thông tin cá nhân.');
+                }
+            } catch (err) {
+                console.error('Lỗi khi tải thông tin cá nhân:', err);
+            }
+        }
+
+        function showChangePasswordModal() {
+            new bootstrap.Modal(document.getElementById('changePasswordModal')).show();
+        }
+
+        document.getElementById('avatarInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    document.getElementById('avatarPreview').src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            const avatarFile = document.getElementById('avatarInput').files[0];
+
+            let avatarUrl = null;
+
+            // Nếu có file avatar, upload ảnh trước
+            if (avatarFile) {
+                const formData = new FormData();
+                formData.append('image', avatarFile);
+
+                const uploadRes = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (uploadRes.ok) {
+                    const uploadData = await uploadRes.json();
+                    avatarUrl = uploadData.imageUrl; // URL ảnh trả về từ API upload
+                } else {
+                    alert('Lỗi khi tải lên ảnh.');
+                    return;
+                }
+            }
+
+            // Gửi thông tin cá nhân và URL avatar đến API profile-update
+            const res = await fetch('/api/employee/profile-update', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${document.cookie.split('=')[1]}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, username, email, phone, address, avatar_url: avatarUrl })
+            });
+
+            if (res.ok) {
+                alert('Cập nhật thông tin thành công!');
+                bootstrap.Modal.getInstance(document.getElementById('profileModal')).hide();
+                window.location.reload();
+            } else {
+                alert('Có lỗi xảy ra khi cập nhật thông tin.');
+            }
+
+            if (avatarUrl) {
+                const newAvatarUrl = `${avatarUrl}?t=${Date.now()}`; // Thêm timestamp để tránh cache
+                document.querySelector('.avatar').src = newAvatarUrl;
+                document.getElementById('avatarPreview').src = newAvatarUrl;
+            }
+
+            // Làm mới thông tin người dùng sau khi cập nhật
+            const refreshRes = await fetch('/api/employee/profile', {
+                headers: { 'Authorization': `Bearer ${document.cookie.split('=')[1]}` }
+            });
+            if (refreshRes.ok) {
+                const updatedData = await refreshRes.json();
+                document.querySelector('.avatar').src = `${updatedData.profile_image_url}?t=${Date.now()}`;
+            }
+        });
+
+        document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                alert('Mật khẩu mới không khớp!');
+                return;
+            }
+
+            const res = await fetch('/api/employee/change-password', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${document.cookie.split('=')[1]}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ currentPassword, newPassword })
+            });
+
+            if (res.ok) {
+                alert('Đổi mật khẩu thành công!');
+                bootstrap.Modal.getInstance(document.getElementById('changePasswordModal')).hide();
+            } else {
+                const data = await res.json();
+                alert(data.error || 'Có lỗi xảy ra!');
+            }
+        });
+
+        window.onload = async () => {
+            try {
+                const res = await fetch('/api/employee/profile', {
+                    headers: { 'Authorization': `Bearer ${document.cookie.split('=')[1]}` }
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    const employee = data.employee;
+
+                    // Cập nhật thông tin nhân viên trên giao diện
+                    document.querySelector('.avatar').src = employee.profile_image_url || 'https://via.placeholder.com/40';
+                    document.querySelector('.navbar .me-3').textContent = `Xin chào, ${employee.name}`;
+                } else {
+                    console.error('Không thể tải thông tin nhân viên.');
+                }
+            } catch (err) {
+                console.error('Lỗi khi tải thông tin nhân viên:', err);
+            }
+        };
+    </script>
+</body>
+</html>

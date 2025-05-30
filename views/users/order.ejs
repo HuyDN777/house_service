@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt dịch vụ - Dọn Nhà Vui</title>
+    <link rel="stylesheet" href="/css/user/services.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .order-container {
+            max-width: 800px;
+            margin: 120px auto 50px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #026204;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            color: #268728;
+        }
+        .page-title {
+            color: #026204;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .service-info {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid #eee;
+        }
+        .service-info h3 {
+            color: #026204;
+            margin: 0 0 15px 0;
+            font-size: 22px;
+        }
+        .service-info p {
+            margin: 8px 0;
+            color: #333;
+        }
+        .service-info .price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #026204;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #026204;
+            outline: none;
+        }
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        .form-group select {
+            background: white;
+            cursor: pointer;
+        }
+        .submit-btn {
+            background: #026204;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+        .submit-btn:hover {
+            background: #268728;
+        }
+        #msg {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .payment-info {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border: 1px solid #ffeeba;
+        }
+        .payment-info p {
+            margin: 5px 0;
+            color: #856404;
+        }
+        .qr-code {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .qr-code img {
+            max-width: 352px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .quantity-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .quantity-input input {
+            width: 100px;
+            text-align: center;
+        }
+        .unit-label {
+            color: #666;
+            font-size: 16px;
+        }
+        .total-price {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #026204;
+            font-weight: bold;
+        }
+        .price-breakdown {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        .discount-info {
+            color: #e67e22;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="/images/user/logo.png" alt="Dọn Nhà Vui" class="logo">
+        <nav class="nav">
+            <a href="/home">TRANG CHỦ</a>
+            <a href="/services">DỊCH VỤ</a>
+            <a href="#contact">LIÊN HỆ</a>
+        </nav>
+        <nav class="login-register" id="loginRegisterNav">
+            <a href="/login" class="login-btn">ĐĂNG NHẬP</a>
+            <a href="/register" class="register-btn">ĐĂNG KÝ</a>
+        </nav>
+        <nav class="user-greeting" id="userGreetingNav" style="display:none;">
+            <a href="/profile" class="profile-link">
+                <img src="" alt="Avatar" id="userAvatar" class="avatar">
+                <span id="greetingText"></span>
+            </a>
+            <a href="/order-history" class="btn" id="orderHistoryBtn" style="text-decoration: none;">Lịch sử đặt dịch vụ</a>
+            <button onclick="logout()" class="logout-btn">Đăng xuất</button>
+        </nav>
+    </header>
+
+    <div class="order-container">
+        <a href="/services" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Quay lại trang dịch vụ
+        </a>
+        <h1 class="page-title">Đặt dịch vụ</h1>
+        
+        <div class="service-info" id="selectedServiceInfo">
+            <!-- Thông tin dịch vụ sẽ được điền vào đây -->
+        </div>
+
+        <form id="orderForm">
+            <input type="hidden" name="service_id" id="serviceId">
+            <div class="form-group">
+                <label>Số lượng:</label>
+                <div class="quantity-input">
+                    <input type="number" name="quantity" id="quantity" min="1" value="1" required>
+                    <span class="unit-label" id="unitLabel"></span>
+                </div>
+                <div class="total-price" id="totalPrice"></div>
+            </div>
+            <div class="form-group">
+                <label>Ngày đặt hàng:</label>
+                <input name="booking_date" id="bookingDate" type="date" readonly>
+            </div>
+            <div class="form-group">
+                <label>Ngày thực hiện:</label>
+                <input name="implementing_date" id="implementingDate" type="date" required min="">
+            </div>
+            <div class="form-group">
+                <label>Địa chỉ thực hiện:</label>
+                <input name="address" placeholder="Nhập địa chỉ chi tiết" required>
+            </div>
+            <div class="form-group">
+                <label>Ghi chú:</label>
+                <textarea name="note" placeholder="Nhập ghi chú (nếu có)"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Mã khuyến mãi:</label>
+                <input name="coupon_code" placeholder="Nhập mã khuyến mãi (nếu có)">
+            </div>
+            <div class="form-group">
+                <label>Hình thức thanh toán:</label>
+                <select name="payment_method" id="paymentMethod" required>
+                    <option value="pay_now">Trả trước</option>
+                    <option value="pay_later">Trả sau</option>
+                </select>
+            </div>
+            <div class="payment-info" id="paymentInfo" style="display: none;">
+                <p><i class="fas fa-info-circle"></i> Khi chọn thanh toán trước, bạn sẽ nhận được mã QR để quét thanh toán.</p>
+            </div>
+            <div class="qr-code" id="qrCode" style="display: none;">
+                <img src="" alt="QR Code" id="qrCodeImage">
+                <p>Vui lòng quét mã QR để thanh toán</p>
+            </div>
+            <button type="submit" class="submit-btn">Xác nhận đặt hàng</button>
+        </form>
+        <div id="msg"></div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Về chúng tôi</h3>
+                <p>Dọn Nhà Vui - Dịch vụ vệ sinh chuyên nghiệp, uy tín hàng đầu</p>
+            </div>
+            <div class="footer-section">
+                <h3>Liên kết</h3>
+                <a href="#">Chính sách</a>
+                <a href="#">Điều khoản sử dụng</a>
+                <a href="#">Về chúng tôi</a>
+            </div>
+            <div class="footer-section">
+                <h3>Theo dõi chúng tôi</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Dịch Vụ Vệ Sinh & Sửa Chữa - All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function getCookieValue(name) {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [key, val] = cookie.trim().split('=');
+                if (key === name) return decodeURIComponent(val);
+            }
+            return null;
+        }
+        const selectedService = JSON.parse(localStorage.getItem('selectedService') || '{}');
+
+        // Hiển thị thông tin dịch vụ đã chọn
+        if (selectedService.id) {
+            document.getElementById('serviceId').value = selectedService.id;
+            document.getElementById('selectedServiceInfo').innerHTML = `
+                <h3>${selectedService.name}</h3>
+                <p class="price">Giá: ${selectedService.price.toLocaleString()} VNĐ/${selectedService.unit || 'đơn vị'}</p>
+                <p>Đơn vị tính: ${selectedService.unit || 'Không có'}</p>
+            `;
+            // Hiển thị đơn vị tính
+            document.getElementById('unitLabel').textContent = selectedService.unit || 'đơn vị';
+        } else {
+            window.location.href = '/services';
+        }
+
+        // Set ngày đặt hàng là ngày hiện tại
+        const today = new Date();
+        document.getElementById('bookingDate').value = today.toISOString().slice(0,10);
+
+        // Set ngày thực hiện tối thiểu là ngày mai
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate());
+        document.getElementById('implementingDate').min = tomorrow.toISOString().slice(0,10);
+
+        // Tính tổng tiền khi thay đổi số lượng
+        function updateTotalPrice() {
+            const quantity = parseInt(document.getElementById('quantity').value) || 0;
+            const pricePerUnit = selectedService.price;
+            const total = quantity * pricePerUnit;
+            document.getElementById('totalPrice').innerHTML = `
+                Tổng tiền: ${total.toLocaleString()} VNĐ
+                <div class="price-breakdown">
+                    (${quantity} ${selectedService.unit || 'đơn vị'} × ${pricePerUnit.toLocaleString()} VNĐ)
+                </div>
+            `;
+        }
+
+        // Cập nhật tổng tiền khi thay đổi số lượng
+        document.getElementById('quantity').addEventListener('input', updateTotalPrice);
+
+        // Cập nhật tổng tiền ban đầu
+        updateTotalPrice();
+
+        // Xử lý hiển thị thông tin thanh toán
+        document.getElementById('paymentMethod').addEventListener('change', function(e) {
+            const paymentInfo = document.getElementById('paymentInfo');
+            if (e.target.value === 'pay_now') {
+                paymentInfo.style.display = 'block';
+            } else {
+                paymentInfo.style.display = 'none';
+            }
+        });
+
+        // Xử lý form submit
+        document.getElementById('orderForm').onsubmit = async function(e) {
+            let token = getCookieValue('token');
+            e.preventDefault();
+
+            if(!token) { 
+                alert('Bạn phải đăng nhập để đặt hàng!');
+                window.location.href = '/login';
+                return;
+            }
+
+            const form = e.target;
+            const data = {
+                service_id: form.service_id.value,
+                quantity: parseInt(form.quantity.value),
+                booking_date: form.booking_date.value,
+                implementing_date: form.implementing_date.value,
+                address: form.address.value,
+                note: form.note.value,
+                coupon_code: form.coupon_code.value,
+                payment_method: form.payment_method.value
+            };
+
+            try {
+                const res = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                
+                const msgDiv = document.getElementById('msg');
+                if (res.ok && result.paymentUrl) {
+                    // Nếu là trả trước, redirect sang trang thanh toán VNPAY
+                    window.location.href = result.paymentUrl;
+                    return;
+                } else if (res.ok && result.order) {
+                    // Nếu là trả sau, hiển thị thông tin đơn hàng, nhân viên
+                    msgDiv.className = 'success';
+                    let message = result.message;
+                    message += `<br><br>Chi tiết đơn hàng:<br>
+                        - Dịch vụ: ${result.order.service_name}<br>
+                        - Ngày thực hiện: ${result.order.implementing_date}<br>
+                        - Địa chỉ: ${result.order.address}<br>
+                        - Đơn giá: ${result.order.price_per_unit.toLocaleString()} VNĐ<br>
+                        - Số lượng: ${result.order.quantity}<br>
+                        - Giảm giá: ${result.order.discount}%<br>
+                        - Tổng tiền: ${result.order.final_price.toLocaleString()} VNĐ<br>
+                        - Nhân viên: ${result.employee ? result.employee.name : 'Đang chờ phân công'}<br>
+                        - SĐT nhân viên: ${result.employee ? result.employee.phone : '-'}<br>
+                        - Trạng thái: ${result.order.status === 'in_progress' ? 'Đang thực hiện' : 'Chờ xử lý'}<br>
+                    `;
+                    msgDiv.innerHTML = message;
+                    // Vô hiệu hóa nút submit
+                    const submitBtn = document.querySelector('.submit-btn');
+                    submitBtn.innerText = 'Đã đặt hàng thành công';
+                    submitBtn.disabled = true;
+                    submitBtn.style.background = '#ccc';
+                    submitBtn.style.cursor = 'not-allowed';
+                } else {
+                    msgDiv.className = 'error';
+                    msgDiv.innerText = result.error;
+                }
+            } catch (err) {
+                document.getElementById('msg').className = 'error';
+                document.getElementById('msg').innerText = 'Có lỗi xảy ra, vui lòng thử lại!';
+            }
+        }
+
+        // Kiểm tra đăng nhập và hiển thị thông tin người dùng
+        async function checkLogin() {
+            let token = getCookieValue('token');
+
+            try {
+                const response = await fetch('/api/user/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                
+                if (data.user) {
+                    document.getElementById('loginRegisterNav').style.display = 'none';
+                    document.getElementById('userGreetingNav').style.display = 'flex';
+                    document.getElementById('greetingText').innerText = `Xin chào, ${data.user.name}`;
+                    
+                    if (data.user.avatar_url) {
+                        document.getElementById('userAvatar').src = data.user.avatar_url;
+                    } else {
+                        document.getElementById('userAvatar').src = '/images/user/default-avatar.png';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('avatar');
+            window.location.href = '/';
+        }
+
+        // Kiểm tra đăng nhập khi trang được tải
+        window.onload = function() {
+            checkLogin();
+        };
+
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                // Trang được load lại từ cache (bấm back)
+                document.getElementById('orderForm').reset();
+                document.getElementById('msg').innerHTML = '';
+                document.getElementById('msg').className = '';
+                document.getElementById('qrCode').style.display = 'none';
+                // Đặt lại trạng thái nút submit
+                const submitBtn = document.querySelector('.submit-btn');
+                submitBtn.innerText = 'Xác nhận đặt hàng';
+                submitBtn.disabled = false;
+                submitBtn.style.background = '#026204';
+                submitBtn.style.cursor = 'pointer';
+                // Cập nhật lại tổng tiền
+                updateTotalPrice();
+            }
+        };
+    </script>
+</body>
+</html> 

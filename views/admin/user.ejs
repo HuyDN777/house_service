@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý người dùng</title>
+    <link rel="stylesheet" href="/css/admin/user.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <ul>
+            <li><a href="/admin/dashboard">📊 Dashboard</a></li>
+            <li><a href="/admin/orders?page=1&pageSize=10">📅 Quản lý đơn hàng</a></li>
+            <li><a href="/admin/services?page=1&pageSize=10">🛠 Quản lý dịch vụ</a></li>
+            <li><a href="/admin/user?page=1&pageSize=10">👥 Quản lý người dùng</a></li>
+            <li><a href="/admin/categories?page=1&pageSize=10">📂 Quản lý danh mục</a></li>
+            <li><a href="/admin/employees?page=1&pageSize=10">👨‍🔧 Quản lý nhân viên</a></li>
+            <li><a href="/admin/coupons?page=1&pageSize=10">🏷 Quản lý mã khuyến mãi</a></li>
+            <li><a href="/admin/bills?page=1&pageSize=10">💵 Quản lý hóa đơn</a></li>
+            <li><a href="/admin/feedback?page=1&pageSize=10">⭐ Quản lý đánh giá</a></li>
+          </ul>
+    </div>
+    <div class="content">
+        <h1>Quản lý người dùng</h1>
+        <form method="get" style="display:inline;" id="pageSizeForm">
+            <input type="hidden" name="page" value="<%= page %>">
+            <input type="hidden" name="token" value="<%= token %>">
+            <label for="pageSize">Số dòng/trang:</label>
+            <input type="number" name="pageSize" id="pageSize" min="1" max="100" value="<%= pageSize %>" style="width:60px;">
+        </form>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Người Dùng</th>
+                        <th>Tên</th>
+                        <th>Tên Đăng Nhập</th>
+                        <th>Mật Khẩu</th>
+                        <th>Địa Chỉ</th>
+                        <th>Số Điện Thoại</th>
+                        <th>Email</th>
+                        <th>Avatar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(user => { %>
+                        <tr>
+                            <td><%= user.id %></td>
+                            <td><%= user.name %></td>
+                            <td><%= user.username %></td>
+                            <td><%= user.password %></td>
+                            <td><%= user.address %></td>
+                            <td><%= user.phone %></td>
+                            <td><%= user.email %></td>
+                            <td><a href="<%= user.avatar_url %>" target="_blank">Xem ảnh</a></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination">
+            <% if (page > 1) { %>
+                <a href="?page=<%= page - 1 %>&pageSize=<%= pageSize %>&token=<%= token %>">Trang trước</a>
+            <% } %>
+            <span>Trang <%= page %> / <%= totalPages %></span>
+            <% if (page < totalPages) { %>
+                <a href="?page=<%= page + 1 %>&pageSize=<%= pageSize %>&token=<%= token %>">Trang sau</a>
+            <% } %>
+        </div>
+        <button class="btn-add">Thêm Người Dùng</button>
+
+        <!-- Modal thêm người dùng -->
+       <div id="addUserModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Thêm Người Dùng</h2>
+                    <span class="close" onclick="closeModal()">&times;</span>
+                </div>
+                <form id="addUserForm" onsubmit="addUser(event)" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="name">Tên người dùng:</label>
+                        <input type="text" id="name" name="name" placeholder="Nhập tên người dùng" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Tên đăng nhập:</label>
+                        <input type="text" id="username" name="username" placeholder="Nhập tên đăng nhập" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mật khẩu:</label>
+                        <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Địa chỉ:</label>
+                        <input type="text" id="address" name="address" placeholder="Nhập địa chỉ">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại:</label>
+                        <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" placeholder="Nhập email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="avatar">Ảnh đại diện:</label>
+                        <input type="file" id="avatar" name="avatar" accept="image/*">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-save">Lưu</button>
+                        <button type="button" class="btn btn-cancel" onclick="closeModal()">Hủy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById("addUserModal");
+        const btnAdd = document.querySelector(".btn-add");
+
+        btnAdd.addEventListener("click", () => {
+            modal.style.display = "flex";
+        });
+
+        function closeModal() {
+            modal.style.display = "none";
+            document.getElementById("addUserForm").reset();
+        }
+
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        async function uploadAvatar(file) {
+            const formData = new FormData();
+            formData.append('image', file);
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Lỗi khi tải ảnh lên');
+            }
+
+            const data = await response.json();
+            return data.imageUrl; // Trả về URL ảnh
+        }
+
+        async function addUser(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            try {
+                // Upload ảnh trước
+                const avatarFile = formData.get('avatar');
+                const avatarUrl = await uploadAvatar(avatarFile);
+
+                // Gửi thông tin người dùng cùng URL ảnh
+                const userData = {
+                    name: formData.get('name'),
+                    username: formData.get('username'),
+                    password: formData.get('password'),
+                    address: formData.get('address'),
+                    phone: formData.get('phone'),
+                    email: formData.get('email'),
+                    avatar_url: avatarUrl, // URL ảnh từ API upload
+                };
+
+                const response = await fetch('/admin/users/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData),
+                });
+
+                if (response.ok) {
+                    alert('Thêm người dùng thành công!');
+                    closeModal();
+                    location.reload(); // Reload lại trang
+                } else {
+                    alert('Lỗi khi thêm người dùng');
+                }
+            } catch (error) {
+                console.error('Lỗi:', error);
+            }
+        }
+
+        // Tự động submit khi thay đổi giá trị
+        document.getElementById('pageSize').addEventListener('change', function() {
+            document.getElementById('pageSizeForm').submit();
+        });
+        // Hoặc submit khi nhấn Enter
+        document.getElementById('pageSize').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') document.getElementById('pageSizeForm').submit();
+        });
+
+        (function() {
+            function getToken() {
+                const params = new URLSearchParams(window.location.search);
+                return params.get('token');
+            }
+            let token = getToken();
+            if (!token) {
+                token = localStorage.getItem('token');
+                if (token) {
+                    const params = new URLSearchParams(window.location.search);
+                    params.set('token', token);
+                    window.location.search = params.toString();
+                    return;
+                } else {
+                    alert('Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết hạn!');
+                    window.location.href = '/login';
+                    return;
+                }
+            }
+            // Sửa tất cả các link trong sidebar để giữ token
+            document.querySelectorAll('.sidebar a').forEach(link => {
+                if (link.href && link.href.startsWith(window.location.origin + '/admin/')) {
+                    const url = new URL(link.href);
+                    url.searchParams.set('token', token);
+                    link.href = url.pathname + url.search;
+                }
+            });
+            // Sửa tất cả các link phân trang để giữ token
+            document.querySelectorAll('.pagination a').forEach(link => {
+                const url = new URL(link.href, window.location.origin);
+                url.searchParams.set('token', token);
+                link.href = url.pathname + url.search;
+            });
+        })();
+    </script>
+</body>
+</html>

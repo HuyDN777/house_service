@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý Mã khuyến mãi</title>
+  <link rel="stylesheet" href="/css/admin/services_management.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 400px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .btn-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <ul>
+      <li><a href="/admin/dashboard">📊 Dashboard</a></li>
+      <li><a href="/admin/orders?page=1&pageSize=10">📅 Quản lý đơn hàng</a></li>
+      <li><a href="/admin/services?page=1&pageSize=10">🛠 Quản lý dịch vụ</a></li>
+      <li><a href="/admin/user?page=1&pageSize=10">👥 Quản lý người dùng</a></li>
+      <li><a href="/admin/categories?page=1&pageSize=10">📂 Quản lý danh mục</a></li>
+      <li><a href="/admin/employees?page=1&pageSize=10">👨‍🔧 Quản lý nhân viên</a></li>
+      <li><a href="/admin/coupons?page=1&pageSize=10">🏷 Quản lý mã khuyến mãi</a></li>
+      <li><a href="/admin/bills?page=1&pageSize=10">💵 Quản lý hóa đơn</a></li>
+      <li><a href="/admin/feedback?page=1&pageSize=10">⭐ Quản lý đánh giá</a></li>
+    </ul>
+  </div>
+  <div class="container">
+    <h1>Quản lý Mã khuyến mãi</h1>
+    <form method="get" style="display:inline;" id="pageSizeForm">
+        <input type="hidden" name="page" value="<%= page %>">
+        <input type="hidden" name="token" value="<%= token %>">
+        <label for="pageSize">Số dòng/trang:</label>
+        <input type="number" name="pageSize" id="pageSize" min="1" max="100" value="<%= pageSize %>" style="width:60px;">
+    </form>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Mã</th>
+        <th>Giảm (%)</th>
+        <th>Ngày bắt đầu</th>
+        <th>Ngày kết thúc</th>
+        <th>Hành động</th>
+      </tr>
+      <% coupons.forEach(coupon => { %>
+        <tr>
+          <td><%= coupon.id %></td>
+          <td><%= coupon.code %></td>
+          <td><%= coupon.discount %></td>
+          <td><%= coupon.start_date ? coupon.start_date.toLocaleString ? coupon.start_date.toLocaleString() : coupon.start_date : '' %></td>
+          <td><%= coupon.end_date ? coupon.end_date.toLocaleString ? coupon.end_date.toLocaleString() : coupon.end_date : '' %></td>
+          <td>
+            <button class="btn btn-delete" onclick="deletePromotion('<%= coupon.id %>')">Xóa</button>
+          </td>
+        </tr>
+      <% }) %>
+    </table>
+    <button class="btn-add" onclick="openAddModal()">Thêm mã khuyến mãi</button>
+
+    <!-- Modal thêm mã khuyến mãi -->
+    <div id="addCouponModal" class="modal">
+      <div class="modal-content">
+        <h2>Thêm Mã Khuyến Mãi</h2>
+        <form id="addCouponForm">
+          <div class="form-group">
+            <label>Mã:</label>
+            <input type="text" name="code" required>
+          </div>
+
+          <div class="form-group">
+            <label>Giảm (%):</label>
+            <input type="number" name="discount" min="1" max="100" required>
+          </div>
+
+          <div class="form-group">
+            <label>Ngày bắt đầu:</label>
+            <input type="date" name="start_date" required>
+          </div>
+
+          <div class="form-group">
+            <label>Ngày kết thúc:</label>
+            <input type="date" name="end_date" required>
+          </div>
+
+          <div class="btn-group">
+            <button type="submit" class="btn">Lưu</button>
+            <button type="button" class="btn btn-cancel" onclick="closeModal('addCouponModal')">Hủy</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal sửa mã khuyến mãi -->
+    <div id="editCouponModal" class="modal">
+      <div class="modal-content">
+        <h2>Sửa Mã Khuyến Mãi</h2>
+        <form id="editCouponForm">
+          <input type="hidden" id="editPromotionId">
+          <div class="form-group">
+            <label>Mã:</label>
+            <input type="text" id="editCode" required>
+          </div>
+
+          <div class="form-group">
+            <label>Giảm (%):</label>
+            <input type="number" id="editDiscount" min="1" max="100" required>
+          </div>
+
+          <div class="form-group">
+            <label>Ngày bắt đầu:</label>
+            <input type="date" id="editStartDate" required>
+          </div>
+
+          <div class="form-group">
+            <label>Ngày kết thúc:</label>
+            <input type="date" id="editEndDate" required>
+          </div>
+
+          <div class="btn-group">
+            <button type="submit" class="btn">Lưu</button>
+            <button type="button" class="btn btn-cancel" onclick="closeModal('editCouponModal')">Hủy</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <% if (page > 1) { %>
+          <a href="?page=<%= page - 1 %>&pageSize=<%= pageSize %>">Trang trước</a>
+      <% } %>
+      <span>Trang <%= page %> / <%= totalPages %></span>
+      <% if (page < totalPages) { %>
+          <a href="?page=<%= page + 1 %>&pageSize=<%= pageSize %>">Trang sau</a>
+      <% } %>
+  </div>
+  </div>
+
+  <script>
+    // Mở modal thêm mới
+    function openAddModal() {
+      document.getElementById('addCouponModal').style.display = 'flex';
+    }
+
+    // Đóng modal
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+      if (modalId === 'addCouponModal') {
+        document.getElementById('addCouponForm').reset();
+      }
+    }
+
+    // Mở modal sửa
+    function editPromotion(id, code, discount, startDate, endDate, orderId) {
+      document.getElementById('editPromotionId').value = id;
+      document.getElementById('editCode').value = code;
+      document.getElementById('editDiscount').value = discount;
+      document.getElementById('editStartDate').value = startDate;
+      document.getElementById('editEndDate').value = endDate;
+      document.getElementById('editOrderId').value = orderId || '';
+      document.getElementById('editCouponModal').style.display = 'flex';
+    }
+
+    // Xử lý submit form thêm mới
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('addCouponForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const data = {
+          code: form.code.value,
+          discount: form.discount.value,
+          start_date: form.start_date.value,
+          end_date: form.end_date.value
+        };
+
+        try {
+          const response = await fetch('/admin/coupons/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+
+          if (response.ok) {
+            alert('Thêm mã khuyến mãi thành công!');
+            window.location.reload();
+          } else {
+            const resData = await response.json();
+            alert(resData.error || 'Có lỗi xảy ra khi thêm mã khuyến mãi!');
+          }
+        } catch (error) {
+          alert('Có lỗi xảy ra!');
+          console.error(error);
+        }
+      });
+    });
+
+    // Xử lý submit form sửa
+    document.getElementById('editCouponForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const promotionId = document.getElementById('editPromotionId').value;
+      const data = {
+        code: document.getElementById('editCode').value,
+        discount: document.getElementById('editDiscount').value,
+        start_date: document.getElementById('editStartDate').value,
+        end_date: document.getElementById('editEndDate').value,
+        Orderid: document.getElementById('editOrderId').value || null
+      };
+
+      try {
+        const response = await fetch(`/api/promotions/${promotionId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          alert('Cập nhật mã khuyến mãi thành công!');
+          window.location.reload();
+        } else {
+          const data = await response.json();
+          alert(data.error || 'Có lỗi xảy ra khi cập nhật mã khuyến mãi!');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Có lỗi xảy ra!');
+      }
+    });
+
+    // Xử lý xóa mã khuyến mãi
+    async function deletePromotion(promotionId) {
+      if (confirm('Bạn có chắc chắn muốn xóa mã khuyến mãi này?')) {
+        try {
+          const response = await fetch(`/admin/coupons/${promotionId}`, {
+            method: 'DELETE'
+          });
+
+          if (response.ok) {
+            alert('Xóa mã khuyến mãi thành công!');
+            window.location.reload();
+          } else {
+            const data = await response.json();
+            alert(data.error || 'Có lỗi xảy ra khi xóa mã khuyến mãi!');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Có lỗi xảy ra!');
+        }
+      }
+    }
+
+    // Tự động submit khi thay đổi giá trị
+    document.getElementById('pageSize').addEventListener('change', function() {
+        document.getElementById('pageSizeForm').submit();
+    });
+    // Hoặc submit khi nhấn Enter
+    document.getElementById('pageSize').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') document.getElementById('pageSizeForm').submit();
+    });
+
+    (function() {
+      function getToken() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('token');
+      }
+      let token = getToken();
+      if (!token) {
+        token = localStorage.getItem('token');
+        if (token) {
+          const params = new URLSearchParams(window.location.search);
+          params.set('token', token);
+          window.location.search = params.toString();
+          return;
+        } else {
+          alert('Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết hạn!');
+          window.location.href = '/login';
+          return;
+        }
+      }
+      // Sửa tất cả các link trong sidebar để giữ token
+      document.querySelectorAll('.sidebar a').forEach(link => {
+        if (link.href && link.href.startsWith(window.location.origin + '/admin/')) {
+          const url = new URL(link.href);
+          url.searchParams.set('token', token);
+          link.href = url.pathname + url.search;
+        }
+      });
+      // Sửa tất cả các link phân trang để giữ token
+      document.querySelectorAll('.pagination a').forEach(link => {
+        const url = new URL(link.href, window.location.origin);
+        url.searchParams.set('token', token);
+        link.href = url.pathname + url.search;
+      });
+    })();
+  </script>
+</body>
+</html>

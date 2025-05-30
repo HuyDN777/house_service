@@ -1,0 +1,699 @@
+:root {
+  --primary-color: #4CAF50;
+  --secondary-color: #2196F3;
+  --text-color: #333;
+  --light-gray: #f5f5f5;
+  --dark-gray: #666;
+  --white: #fff;
+  --shadow: 0 2px 5px rgba(0,0,0,0.1);
+  --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Kodchasan', sans-serif;
+}
+
+body {
+    padding-top: 100px;
+}
+
+/* .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background: white;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo {
+    height: 60px;
+    width: auto;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: center;
+}
+
+.nav a {
+    margin: 0 40px;
+    text-decoration: none;
+    color: #026204;
+    font-weight: bold;
+    font-size: 20px;
+    transition: color 0.2s;
+}
+
+.nav a:hover {
+    color: #268728;
+}
+
+.login-register, .user-greeting {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 30px;
+}
+
+.login-register a {
+    margin: 0 20px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.login-btn {
+    color: #026204;
+}
+
+.register-btn {
+    background: #026204;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.register-btn:hover {
+    background: #268728;
+}
+
+.user-greeting {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Kodchasan', sans-serif;
+    font-size: 20px;
+    color: #026204;
+}
+
+.user-greeting #greetingText {
+    font-weight: 500;
+    color: #026204;
+}
+
+.user-greeting .btn, 
+.user-greeting a.btn {
+    background: #026204;
+    color: #fff !important;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-size: 16px;
+    font-family: 'Kodchasan', sans-serif;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+    margin: 0;
+}
+
+.user-greeting .btn:hover, 
+.user-greeting a.btn:hover {
+    background: #268728;
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+} */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  padding: 1rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow);
+  z-index: 1000;
+}
+
+.logo {
+  height: 50px;
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.nav a:hover {
+  color: var(--primary-color);
+}
+
+.login-register, .user-greeting {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.login-btn, .register-btn, .logout-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.login-btn {
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.register-btn {
+  background: var(--primary-color);
+  color: var(--white);
+}
+
+.logout-btn {
+  background: #f44336;
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+}
+
+.profile-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.hero {
+    background: url('/images/user/background (2).jpg') no-repeat center center/cover;
+    height: 540px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    padding-left: 8vw;
+    color: white;
+    position: relative;
+    margin-top: -17px;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.4);
+}
+
+.hero-content {
+    font-size: 48px;
+    font-weight: bold;
+    line-height: 1.2;
+    margin: 0;
+    width: auto;
+    z-index: 2;
+    text-align: left;
+    text-shadow: 2px 4px 16px rgba(0,0,0,0.4);
+}
+
+.service-controls {
+    text-align: center;
+    margin: 30px 0;
+    padding: 0 20px;
+}
+
+.service-controls label {
+    margin: 0 10px;
+}
+
+.service-controls input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.service-controls button {
+    background: #026204;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 5px;
+    transition: background 0.2s;
+}
+
+.service-controls button:hover {
+    background: #268728;
+}
+
+.service-controls button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.service-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+}
+
+.service-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.service-card h3 {
+    padding: 15px;
+    color: #026204;
+    font-size: 20px;
+    text-align: center;
+}
+
+.service-card button {
+    width: 100%;
+    padding: 12px;
+    background: #026204;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s;
+}
+
+.service-card button:hover {
+    background: #268728;
+}
+
+.modal {
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #666;
+}
+
+.modal-content h2 {
+    color: #026204;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-content p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.modal-content b {
+    color: #026204;
+}
+
+.modal-content button {
+    width: 100%;
+    padding: 12px;
+    background: #026204;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background 0.2s;
+}
+
+.modal-content button:hover {
+    background: #268728;
+}
+
+.contact {
+    background: #f9f9f9;
+    padding: 50px 20px;
+    margin-top: 50px;
+}
+
+.section-title {
+    text-align: center;
+    color: #026204;
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+
+.contact-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.contact-item i {
+    font-size: 24px;
+    color: #026204;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.contact-form textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+.contact-form button {
+    background: #026204;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s;
+}
+
+.contact-form button:hover {
+    background: #268728;
+}
+
+.footer {
+    background: #026204;
+    color: white;
+    padding: 50px 20px 20px;
+    margin-top: 50px;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.footer-section h3 {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.footer-section a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    margin: 10px 0;
+    transition: opacity 0.2s;
+}
+
+.footer-section a:hover {
+    opacity: 0.8;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+}
+
+.social-links a {
+    font-size: 24px;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 10px 20px;
+    }
+
+    .nav a {
+        margin: 0 15px;
+        font-size: 16px;
+    }
+
+    .login-register a {
+        font-size: 16px;
+        margin: 0 10px;
+    }
+
+    .hero-content {
+        font-size: 36px;
+    }
+
+    .contact-content {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+
+    .service-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .nav {
+        margin: 10px 0;
+    }
+
+    .login-register {
+        margin: 10px 0;
+    }
+
+    .hero-content {
+        font-size: 28px;
+    }
+
+    .service-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .service-controls label {
+        margin: 5px 0;
+    }
+}
+
+.filter-controls {
+    margin: 20px 371px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-controls input,
+.filter-controls select,
+.filter-controls button {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.filter-controls button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.filter-controls button:hover {
+    background-color: #0056b3;
+}
+.coupons {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 800px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.coupons h2 {
+    text-align: center;
+    color: #026204;
+    margin-bottom: 20px;
+}
+
+.coupon-item {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background: white;
+}
+
+.coupon-item p {
+    margin: 5px 0;
+}
+#notificationButton {
+    position: fixed; /* Đặt nút ở vị trí cố định */
+    bottom: 20px; /* Cách đáy 20px */
+    right: 20px; /* Cách phải 20px */
+    background-color: #007bff; /* Màu nền */
+    color: white; /* Màu chữ */
+    border: none; /* Xóa viền */
+    border-radius: 50%; /* Bo tròn nút */
+    width: 40px; /* Chiều rộng nhỏ hơn */
+    height: 40px; /* Chiều cao nhỏ hơn */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; /* Con trỏ chuột */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+    z-index: 1000; /* Đảm bảo nút nằm trên các phần tử khác */
+    font-size: 16px; /* Kích thước biểu tượng nhỏ hơn */
+}
+
+#notificationButton:hover {
+    background-color: #0056b3; /* Màu nền khi hover */
+}
+#notifications {
+    position: fixed;
+    bottom: 80px; /* Cách nút thông báo 80px */
+    right: 20px; /* Cách phải 20px */
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none; /* Ẩn mặc định */
+}
+
+#notifications h2 {
+    font-size: 16px;
+    margin: 10px;
+    color: #333;
+}
+
+#notifications ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#notifications li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
+}
+
+#notifications li:last-child {
+    border-bottom: none;
+}
+#notificationButton {
+    top: 21px; /* Cách trên 20px */
+    right: 20px; /* Cách phải 20px */
+    bottom: auto; /* Xóa khoảng cách đáy */
+}

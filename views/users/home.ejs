@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ - Dọn Nhà Vui</title>
+    <link rel="stylesheet" href="/css/user/home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <img src="images/user/logo.png" alt="Dọn Nhà Vui" class="logo">
+        <nav class="nav">
+            <a href="/home">TRANG CHỦ</a>
+            <a href="/services">DỊCH VỤ</a>
+            <a href="#contact">LIÊN HỆ</a>
+        </nav>
+        <nav class="login-register" id="loginRegisterNav">
+            <a href="/login" class="login-btn">ĐĂNG NHẬP</a>
+            <a href="/register" class="register-btn">ĐĂNG KÝ</a>
+        </nav>
+        <nav class="user-greeting" id="userGreetingNav" style="display:none;">
+            <a href="/profile" class="profile-link">
+                <img src="" alt="Avatar" id="userAvatar" class="avatar">
+                <span id="greetingText"></span>
+            </a>
+            <a href="/order-history" class="btn" id="orderHistoryBtn">Lịch sử đặt dịch vụ</a>
+            <a href="/admin/dashboard" class="btn" id="adminNavBtn" style="display:none;">Quản trị</a>
+            <form action="/logout" method="post" style="display:inline;">
+                <button type="submit" class="logout-btn" onclick="logout()">Đăng xuất</button>
+            </form>
+        </nav>
+    </header>
+    
+    <div class="blur-element"></div>
+    
+    <section class="hero">
+        <div class="hero-content">
+            <h1>NHÀ SẠCH - SỐNG XANH<br>CUỘC SỐNG AN LÀNH</h1>
+            <a href="/services" class="btn btn-primary">ĐẶT NGAY</a>
+        </div>
+    </section>
+
+    <section class="services" id="services">
+        <h2 class="section-title">DỊCH VỤ CỦA CHÚNG TÔI</h2>
+        <div class="services-grid">
+            <div class="service">
+                <img src="/images/user/don_nha.png" alt="Dọn dẹp nhà cửa">
+                <h3>DỌN DẸP NHÀ CỬA</h3>
+                <p>Vệ sinh tổng thể nhà ở</p>
+                <a href="/services" class="service-link">Xem chi tiết</a>
+            </div>
+            <div class="service">
+                <img src="/images/user/van_phong.png" alt="Vệ sinh văn phòng">
+                <h3>VỆ SINH VĂN PHÒNG</h3>
+                <p>Giữ không gian làm việc sạch sẽ</p>
+                <a href="/services" class="service-link">Xem chi tiết</a>
+            </div>
+            <div class="service">
+                <img src="/images/user/diet_khuan.png" alt="Khử trùng diệt khuẩn">
+                <h3>KHỬ TRÙNG DIỆT KHUẨN</h3>
+                <p>Đảm bảo an toàn sức khỏe</p>
+                <a href="/services" class="service-link">Xem chi tiết</a>
+            </div>
+            <div class="service">
+                <img src="/images/user/sofa.png" alt="Giặt thảm, sofa, rèm cửa">
+                <h3>GIẶT THẢM, SOFA, RÈM CỬA</h3>
+                <p>Làm sạch lâu, không gây hại</p>
+                <a href="/services" class="service-link">Xem chi tiết</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="booking">
+        <h2 class="section-title">ĐẶT LỊCH DỄ DÀNG CHỈ VỚI VÀI CÚ CLICK!</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h3>1. Địa chỉ của bạn</h3>
+                <p>Cung cấp địa chỉ của bạn cho chúng tôi</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>2. Xác nhận thời gian</h3>
+                <p>Chọn thời gian thuận tiện nhất với bạn</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>3. Hoàn thành rồi!</h3>
+                <p>Xác nhận và hãy để chúng tôi lo phần còn lại</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <h2 class="section-title">KHÁCH HÀNG NÓI GÌ VỀ CHÚNG TÔI</h2>
+        <div class="testimonials-slider" id="testimonialsSlider">
+            <!-- Testimonials will be loaded dynamically -->
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <h2 class="section-title">LIÊN HỆ VỚI CHÚNG TÔI</h2>
+        <div class="contact-content">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <p>0123456789</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <p>contact@donhavui.com</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p>123 Đường ABC, Quận XYZ, TP.HCM</p>
+                </div>
+            </div>
+            <div class="contact-form">
+                <form id="contactForm">
+                    <input type="text" placeholder="Họ và tên" required>
+                    <input type="email" placeholder="Email" required>
+                    <textarea placeholder="Nội dung" required></textarea>
+                    <button type="submit" class="btn btn-primary">Gửi tin nhắn</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+   
+        <button id="notificationButton" style="display: none;">
+            <i class="fas fa-bell"></i>
+        </button>
+
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Về chúng tôi</h3>
+                <p>Dọn Nhà Vui - Dịch vụ vệ sinh chuyên nghiệp, uy tín hàng đầu</p>
+            </div>
+            <div class="footer-section">
+                <h3>Liên kết</h3>
+                <a href="#">Chính sách</a>
+                <a href="#">Điều khoản sử dụng</a>
+                <a href="#">Về chúng tôi</a>
+            </div>
+            <div class="footer-section">
+                <h3>Theo dõi chúng tôi</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Dịch Vụ Vệ Sinh & Sửa Chữa - All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <% if (user && (user.role === 'admin' || user.role === 'super_admin')) { %>
+        <a href="/admin/dashboard" class="btn-admin">Vào trang quản trị</a>
+    <% } %>
+
+    <script>
+        async function checkLogin() {
+            // Hàm lấy cookie theo tên
+            function getCookieValue(name) {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const [key, val] = cookie.trim().split('=');
+                    if (key === name) return decodeURIComponent(val);
+                }
+                return null;
+            }
+
+            // Lấy token từ cookie
+            const token = getCookieValue('token');
+
+            if (!token) {
+                // Không có token => gọi toggleLoginState với trạng thái logged out
+                toggleLoginState(false);
+                return;
+            }
+
+            try {
+                // Gửi yêu cầu xác thực token đến server
+                const response = await fetch('/api/user/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Token không hợp lệ hoặc đã hết hạn');
+                }
+
+                const data = await response.json();
+
+                // Nếu có thông tin người dùng, gọi toggleLoginState với trạng thái logged in
+                if (data.user) {
+                    toggleLoginState(true, data.user);
+                } else {
+                    toggleLoginState(false);
+                }
+            } catch (error) {
+                console.error('Lỗi khi xác thực token:', error);
+                toggleLoginState(false); // Hiển thị trạng thái chưa đăng nhập nếu có lỗi
+            }
+        }
+
+
+        function toggleLoginState(isLoggedIn, user) {
+            const loginRegisterNav = document.getElementById('loginRegisterNav');
+            const userGreetingNav = document.getElementById('userGreetingNav');
+            const orderHistoryBtn = document.getElementById('orderHistoryBtn');
+            const adminNavBtn = document.getElementById('adminNavBtn');
+            const userAvatar = document.getElementById('userAvatar');
+            const greetingText = document.getElementById('greetingText');
+            const notificationButton = document.getElementById('notificationButton');
+
+            if (isLoggedIn && user) {
+                // Hiển thị giao diện đã đăng nhập
+                loginRegisterNav.style.display = 'none';
+                userGreetingNav.style.display = 'flex';
+                orderHistoryBtn.style.display = 'inline-block';
+                greetingText.innerText = `Xin chào, ${user.name}`;
+
+                // Hiển thị nút thông báo
+                if (notificationButton) {
+                    notificationButton.style.display = 'flex';
+                }
+
+                // Lưu role vào localStorage nếu chưa có
+                if (user.role) localStorage.setItem('role', user.role);
+
+                // Hiển thị nút admin nếu là admin hoặc super admin
+                if (user.role === 'admin' || user.role === 'super_admin') {
+                    adminNavBtn.style.display = 'inline-block';
+                } else {
+                    adminNavBtn.style.display = 'none';
+                }
+
+                // Hiển thị avatar người dùng
+                userAvatar.src = user.avatar_url || '/images/user/default-avatar.png'; // Thay đổi đường dẫn đến ảnh đại diện nếu cần
+            } else {
+                // Hiển thị giao diện chưa đăng nhập
+                loginRegisterNav.style.display = 'flex';
+                userGreetingNav.style.display = 'none';
+                orderHistoryBtn.style.display = 'none';
+                adminNavBtn.style.display = 'none';
+
+                // Ẩn nút thông báo
+                if (notificationButton) {
+                    notificationButton.style.display = 'none';
+                }
+            }
+        }
+
+        function logout() {
+            // Xóa token trong localStorage
+            localStorage.removeItem('token');
+            // Xóa cookie token
+            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            // Gửi yêu cầu đăng xuất đến server
+            fetch('/logout', { method: 'GET' })
+                .then(() => {
+                    // Cập nhật giao diện về trạng thái chưa đăng nhập
+                    toggleLoginState(false);
+                    // Tải lại trang hoặc chuyển hướng
+                    window.location.href = '/';
+                })
+                .catch(err => console.error('Lỗi khi đăng xuất:', err));
+        }
+
+        // Load testimonials
+        // async function loadTestimonials() {
+        //     try {
+        //         const response = await fetch('/api/feedback');
+        //         const data = await response.json();
+        //         const slider = document.getElementById('testimonialsSlider');
+                
+        //         data.feedbacks.forEach(feedback => {
+        //             const testimonial = document.createElement('div');
+        //             testimonial.className = 'testimonial';
+        //             testimonial.innerHTML = `
+        //                 <div class="rating">
+        //                     ${'★'.repeat(feedback.rating)}${'☆'.repeat(5-feedback.rating)}
+        //                 </div>
+        //                 <p class="comment">${feedback.comment}</p>
+        //                 <p class="customer">${feedback.Userid}</p>
+        //             `;
+        //             slider.appendChild(testimonial);
+        //         });
+        //     } catch (error) {
+        //         console.error('Error loading testimonials:', error);
+        //     }
+        // }
+
+        // Handle contact form submission
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // Add contact form handling logic here
+            alert('Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm nhất có thể!');
+            e.target.reset();
+        });
+
+        document.getElementById('notificationButton').addEventListener('click', () => {
+            const notifications = document.getElementById('notifications');
+            if (notifications.style.display === 'none') {
+                notifications.style.display = 'block';
+            } else {
+                notifications.style.display = 'none';
+            }
+        });
+
+        window.onload = function() {
+            checkLogin();
+            //loadTestimonials();
+        };
+    </script>
+    <script>
+        const userId = '<%= user ? user.id : "" %>'; // Nếu user không tồn tại, trả về chuỗi rỗng
+        if (userId) {
+            const ws = new WebSocket(`ws://localhost:8080?userId=${userId}`);
+
+            ws.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                const notificationList = document.getElementById('notificationList');
+
+                // Tạo thông báo mới
+                const notificationItem = document.createElement('li');
+                notificationItem.innerText = data.message;
+
+                // Thêm thông báo vào danh sách
+                notificationList.appendChild(notificationItem);
+
+                // Tùy chọn: Hiển thị thông báo dưới dạng popup
+                alert(data.message);
+            };
+        } else {
+            console.log("Người dùng chưa đăng nhập, không kết nối WebSocket.");
+        }
+    </script>
+</body>
+</html>

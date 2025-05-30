@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dịch vụ</title>
+    <link rel="stylesheet" href="/css/user/services.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <img src="images/user/logo.png" alt="Dọn Nhà Vui" class="logo">
+        <nav class="nav">
+            <a href="/home">TRANG CHỦ</a>
+            <a href="/services">DỊCH VỤ</a>
+            <a href="#contact">LIÊN HỆ</a>
+        </nav>
+        <nav class="login-register" id="loginRegisterNav">
+            <a href="/login" class="login-btn">ĐĂNG NHẬP</a>
+            <a href="/register" class="register-btn">ĐĂNG KÝ</a>
+        </nav>
+        <nav class="user-greeting" id="userGreetingNav" style="display:none;">
+            <a href="/profile" class="profile-link">
+                <img src="" alt="Avatar" id="userAvatar" class="avatar">
+                <span id="greetingText"></span>
+            </a>
+            <a href="/order-history" class="btn" id="orderHistoryBtn" style="text-decoration: none;">Lịch sử đặt dịch vụ</a>
+            <a href="/admin/dashboard" class="btn" id="adminNavBtn" style="display:none;">Quản trị</a>
+            <form action="/logout" method="post" style="display:inline;">
+                <button type="submit" class="logout-btn" onclick="logout()">Đăng xuất</button>
+            </form>
+        </nav>
+    </header>
+
+   
+
+    <section class="hero">
+        <div class="hero-content">
+            DỊCH VỤ VỆ SINH<br>
+            &<br>
+            SỬA CHỮA<br>
+            CHUYÊN NGHIỆP
+        </div>
+    </section>
+     <!-- Form Tìm Kiếm và Lọc -->
+    <div class="filter-controls">
+        <form id="filterForm">
+            <input type="text" id="keyword" name="keyword" placeholder="Tìm kiếm dịch vụ...">
+            <!-- <select id="category" name="category">
+                <option value="">Chọn danh mục</option>
+                <option value="Housekeeping">Housekeeping</option>
+                <option value="Cleaning">Cleaning</option>
+            </select> -->
+            <input type="number" id="minPrice" name="minPrice" placeholder="Giá tối thiểu">
+            <input type="number" id="maxPrice" name="maxPrice" placeholder="Giá tối đa">
+            <button type="submit">Tìm kiếm</button>
+        </form>
+    </div>
+
+    <div class="service-controls">
+        <label>Page: <input type="number" id="page" value="1" min="1"></label>
+        <label>PageSize: <input type="number" id="pageSize" value="6" min="1"></label>
+        <button onclick="loadServices()">Tải dịch vụ</button>
+        <button id="prevPageBtn" onclick="changePage(-1)">←</button>
+        <button id="nextPageBtn" onclick="changePage(1)">→</button>
+    </div>
+    <div id="pagination-info" style="text-align:center; margin: 10px 0;"></div>
+    <div id="service-list"></div>
+    
+    <section class="coupons">
+        <h2>Mã Giảm Giá</h2>
+        <div id="coupon-list">
+            <!-- Danh sách mã giảm giá sẽ được hiển thị ở đây -->
+        </div>
+    </section>
+
+    <!-- Popup chi tiết dịch vụ -->
+    <div id="serviceModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="modalImage" style="width:100%;max-width:300px;display:block;margin:auto;">
+            <h2 id="modalName"></h2>
+            <p><b>Giá:</b> <span id="modalPrice"></span></p>
+            <p><b>Đơn vị tính:</b> <span id="modalUnit"></span></p>
+            <p><b>Mô tả:</b> <span id="modalDescription"></span></p>
+            <p><b>Loại dịch vụ:</b> <span id="modalCategory"></span></p>
+            <button id="orderBtn" onclick="orderService()">Đặt hàng</button>
+        </div>
+    </div>
+    <button id="notificationButton" style="display: none;">
+        <i class="fas fa-bell"></i>
+    </button>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Về chúng tôi</h3>
+                <p>Dọn Nhà Vui - Dịch vụ vệ sinh chuyên nghiệp, uy tín hàng đầu</p>
+            </div>
+            <div class="footer-section">
+                <h3>Liên kết</h3>
+                <a href="#">Chính sách</a>
+                <a href="#">Điều khoản sử dụng</a>
+                <a href="#">Về chúng tôi</a>
+            </div>
+            <div class="footer-section">
+                <h3>Theo dõi chúng tôi</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Dịch Vụ Vệ Sinh & Sửa Chữa - All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+    let currentServices = [];
+    let currentService = null;
+    let totalPages = 1;
+
+    function getCookieValue(name) {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [key, val] = cookie.trim().split('=');
+                if (key === name) return decodeURIComponent(val);
+            }
+            return null;
+        }
+
+    function getQueryParam(name, defaultValue) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name) || defaultValue;
+    }
+
+    function setQueryParams(page, pageSize) {
+        const url = new URL(window.location);
+        url.searchParams.set('page', page);
+        url.searchParams.set('pageSize', pageSize);
+        window.history.pushState({}, '', url);
+    }
+
+    async function loadServices() {
+        const page = document.getElementById('page').value;
+        const pageSize = document.getElementById('pageSize').value;
+        setQueryParams(page, pageSize);
+        const res = await fetch(`/api/services?page=${page}&pageSize=${pageSize}`);
+        const data = await res.json();
+        currentServices = data.data;
+        renderServices(currentServices);
+        totalPages = Math.ceil(data.total / data.pageSize);
+        document.getElementById('pagination-info').innerText =
+            `Trang ${data.page} / ${totalPages} | Mỗi trang: ${data.pageSize} dịch vụ | Tổng: ${data.total} dịch vụ`;
+        document.getElementById('prevPageBtn').disabled = (data.page <= 1);
+        document.getElementById('nextPageBtn').disabled = (data.page >= totalPages);
+    }
+
+    function renderServices(services) {
+        const list = document.getElementById('service-list');
+        let html = '<div class="service-grid">';
+        services.forEach((s, i) => {
+            html += `
+                <div class="service-card">
+                    <img src="${s.image_url || '/images/user/no_image.png'}" alt="${s.name}" class="service-img">
+                    <h3>${s.name}</h3>
+                    <button onclick="showModal(${i})">Chi tiết</button>
+                </div>
+            `;
+        });
+        html += '</div>';
+        list.innerHTML = html;
+    }
+
+    function showModal(idx) {
+        const s = currentServices[idx];
+        currentService = s;
+        document.getElementById('modalImage').src = s.image_url || '/images/user/no_image.png';
+        document.getElementById('modalName').innerText = s.name;
+        document.getElementById('modalPrice').innerText = s.price + ' VNĐ';
+        document.getElementById('modalUnit').innerText = s.unit || '';
+        document.getElementById('modalDescription').innerText = s.description || '';
+        document.getElementById('modalCategory').innerText = s.category || '';
+        document.getElementById('serviceModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('serviceModal').style.display = 'none';
+    }
+
+    function orderService() {
+        const token = getCookieValue('token');
+        if (!token) {
+            alert('Bạn cần đăng nhập để đặt hàng!');
+            window.location.href = '/login';
+            return;
+        }
+        if (!currentService) return;
+        localStorage.setItem('selectedService', JSON.stringify({
+            id: currentService.id,
+            name: currentService.name,
+            price: currentService.price,
+            unit: currentService.unit
+        }));
+        window.location.href = '/order';
+        closeModal();
+    }
+
+    function changePage(delta) {
+        let pageInput = document.getElementById('page');
+        let page = parseInt(pageInput.value);
+        page += delta;
+        if (page < 1) page = 1;
+        if (page > totalPages) page = totalPages;
+        pageInput.value = page;
+        loadServices();
+    }
+
+    async function checkLogin() {
+        let token = getCookieValue('token');
+        try {
+            const response = await fetch('/api/user/profile', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            
+            if (data.user) {
+                document.getElementById('loginRegisterNav').style.display = 'none';
+                document.getElementById('userGreetingNav').style.display = 'flex';
+                document.getElementById('greetingText').innerText = `Xin chào, ${data.user.name}`;
+                document.getElementById('orderHistoryBtn').style.display = 'inline-block';
+                document.getElementById('notificationButton').style.display = 'flex';
+
+                if (data.user.avatar_url) {
+                    document.getElementById('userAvatar').src = data.user.avatar_url;
+                } else {
+                    document.getElementById('userAvatar').src = '/images/user/default-avatar.png';
+                }
+            }
+        } catch (error) {
+            console.error('Error loading user info:', error);
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('avatar');
+        window.location.href = '/';
+    }
+
+    window.onload = function() {
+        const page = getQueryParam('page', 1);
+        const pageSize = getQueryParam('pageSize', 6);
+        document.getElementById('page').value = page;
+        document.getElementById('pageSize').value = pageSize;
+        loadServices();
+        checkLogin();
+    };
+
+    document.getElementById("filterForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const keyword = document.getElementById("keyword").value;
+        const category = document.getElementById("category").value;
+        const minPrice = document.getElementById("minPrice").value;
+        const maxPrice = document.getElementById("maxPrice").value;
+        const page = document.getElementById("page").value;
+        const pageSize = document.getElementById("pageSize").value;
+
+        const query = new URLSearchParams({
+            keyword,
+            category,
+            minPrice,
+            maxPrice,
+            page,
+            pageSize,
+        });
+
+        try {
+            const response = await fetch(`/api/services/search?${query.toString()}`);
+            const result = await response.json();
+
+            currentServices = result.data;
+            renderServices(currentServices);
+
+            totalPages = Math.ceil(result.total / result.pageSize);
+            document.getElementById('pagination-info').innerText =
+                `Trang ${result.page} / ${totalPages} | Mỗi trang: ${result.pageSize} dịch vụ | Tổng: ${result.total} dịch vụ`;
+            document.getElementById('prevPageBtn').disabled = (result.page <= 1);
+            document.getElementById('nextPageBtn').disabled = (result.page >= totalPages);
+        } catch (err) {
+            console.error("Lỗi khi gọi API:", err);
+        }
+    });
+
+    async function loadCoupons() {
+        try {
+            const response = await fetch('/api/coupons');
+            const data = await response.json();
+            const couponList = document.getElementById('coupon-list');
+            couponList.innerHTML = '';
+
+            if (data.coupons.length === 0) {
+                couponList.innerHTML = '<p>Hiện không có mã giảm giá nào.</p>';
+                return;
+            }
+
+            data.coupons.forEach(coupon => {
+                const couponItem = document.createElement('div');
+                couponItem.className = 'coupon-item';
+                couponItem.innerHTML = `
+                    <p><b>Mã:</b> ${coupon.code}</p>
+                    <p><b>Giảm:</b> ${coupon.discount}%</p>
+                    <p><b>Hạn sử dụng:</b> ${new Date(coupon.end_date).toLocaleDateString()}</p>
+                `;
+                couponList.appendChild(couponItem);
+            });
+        } catch (err) {
+            console.error('Lỗi khi tải mã giảm giá:', err);
+        }
+    }
+
+    // Gọi hàm khi tải trang
+    loadCoupons();
+    </script>
+</body>
+</html>

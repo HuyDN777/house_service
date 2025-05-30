@@ -1,0 +1,99 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Kodchasan', sans-serif;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background: white;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.logo {
+    height: 60px;
+    width: auto;
+}
+
+.nav a {
+    margin: 0 40px;
+    text-decoration: none;
+    color: green;
+    font-weight: bold;
+    font-size: 20px;
+}
+.register-btn {
+    background: green;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+.login-register a {
+    margin: 0 20px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;
+}
+.login-btn {
+    color: green;
+}
+.footer {
+    height: 188px;
+    background: linear-gradient(90deg, white 0%, #999999 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.footer-content p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #026204;
+    font-weight: bold;
+}
+
+.footer-links {
+    margin: 10px 0;
+}
+
+.footer-links a {
+    color: #026204;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+.login, .register {
+    margin-top: 120px;
+    background: linear-gradient(180deg, #026204 0%, #268728 100%);
+    min-height: 700px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form {
+    width: 582px;
+    height: 573px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+}

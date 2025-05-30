@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử đặt dịch vụ - Dọn Nhà Vui</title>
+    <link rel="stylesheet" href="/css/user/services.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .history-container {
+            max-width: 1000px;
+            margin: 120px auto 50px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #026204;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            color: #268728;
+        }
+        .page-title {
+            color: #026204;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .order-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+        }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .order-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #026204;
+        }
+        .order-status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-in-progress {
+            background: #cce5ff;
+            color: #004085;
+        }
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        .order-details {
+            margin-bottom: 15px;
+        }
+        .order-details p {
+            margin: 5px 0;
+            color: #333;
+        }
+        .feedback-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+        .feedback-form {
+            margin-top: 10px;
+        }
+        .rating {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .rating i {
+            color: #ddd;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .rating i.active {
+            color: #ffc107;
+        }
+        .feedback-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+        .submit-feedback {
+            background: #026204;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .submit-feedback:hover {
+            background: #268728;
+        }
+        .admin-reply {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .admin-reply p {
+            margin: 5px 0;
+            color: #495057;
+        }
+        .admin-reply .admin-name {
+            font-weight: bold;
+            color: #026204;
+        }
+        .no-orders {
+            text-align: center;
+            color: #666;
+            padding: 30px;
+        }
+        .pagination-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .pagination-button {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 0 5px;
+            background: #026204;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        .pagination-button:hover {
+            background: #268728;
+        }
+        .pagination-info {
+            margin-top: 10px;
+            color: #333;
+        }
+        .pagination-btn {
+            background: none;
+            border: none;
+            color: #026204;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border-radius: 4px;
+        }
+        .pagination-btn:hover {
+            background: #f1f1f1;
+        }
+        .pagination-btn.active {
+            background: #026204;
+            color: white;
+        }
+        #notificationButton {
+            position: fixed; /* Đặt nút ở vị trí cố định */
+            bottom: 20px; /* Cách đáy 20px */
+            right: 20px; /* Cách phải 20px */
+            background-color: #007bff; /* Màu nền */
+            color: white; /* Màu chữ */
+            border: none; /* Xóa viền */
+            border-radius: 50%; /* Bo tròn nút */
+            width: 40px; /* Chiều rộng nhỏ hơn */
+            height: 40px; /* Chiều cao nhỏ hơn */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer; /* Con trỏ chuột */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+            z-index: 1000; /* Đảm bảo nút nằm trên các phần tử khác */
+            font-size: 16px; /* Kích thước biểu tượng nhỏ hơn */
+        }
+
+        #notificationButton:hover {
+            background-color: #0056b3; /* Màu nền khi hover */
+        }
+        #notifications {
+            position: fixed;
+            bottom: 80px; /* Cách nút thông báo 80px */
+            right: 20px; /* Cách phải 20px */
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none; /* Ẩn mặc định */
+        }
+
+        #notifications h2 {
+            font-size: 16px;
+            margin: 10px;
+            color: #333;
+        }
+
+        #notifications ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #notifications li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+            color: #333;
+        }
+
+        #notifications li:last-child {
+            border-bottom: none;
+        }
+        #notificationButton {
+            top: 20px; /* Cách trên 20px */
+            right: 20px; /* Cách phải 20px */
+            bottom: auto; /* Xóa khoảng cách đáy */
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="/images/user/logo.png" alt="Dọn Nhà Vui" class="logo">
+        <nav class="nav">
+            <a href="/services">DỊCH VỤ</a>
+            <a href="/price">GIÁ CẢ</a>
+            <a href="#contact">LIÊN HỆ</a>
+        </nav>
+        <nav class="login-register" id="loginRegisterNav">
+            <a href="/login" class="login-btn">ĐĂNG NHẬP</a>
+            <a href="/register" class="register-btn">ĐĂNG KÝ</a>
+        </nav>
+        <nav class="user-greeting" id="userGreetingNav" style="display:none;">
+            <a href="/profile" class="profile-link">
+                <img src="" alt="Avatar" id="userAvatar" class="avatar">
+                <span id="greetingText"></span>
+            </a>
+            <a href="/order-history" class="btn" id="orderHistoryBtn" style="text-decoration: none;">Lịch sử đặt dịch vụ</a>
+            <button onclick="logout()" class="logout-btn">Đăng xuất</button>
+        </nav>
+    </header>
+
+    <div class="history-container">
+        <a href="/services" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Quay lại trang dịch vụ
+        </a>
+        <h1 class="page-title">Lịch sử đặt dịch vụ</h1>
+        
+        <div id="ordersList">
+            <!-- Danh sách đơn hàng sẽ được điền vào đây -->
+        </div>
+
+        <div id="pagination" class="pagination-container">
+            <!-- Nút phân trang sẽ được thêm vào đây -->
+        </div>
+    </div>
+    <button id="notificationButton" style="display: none;">
+        <i class="fas fa-bell"></i>
+    </button>
+
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Về chúng tôi</h3>
+                <p>Dọn Nhà Vui - Dịch vụ vệ sinh chuyên nghiệp, uy tín hàng đầu</p>
+            </div>
+            <div class="footer-section">
+                <h3>Liên kết</h3>
+                <a href="#">Chính sách</a>
+                <a href="#">Điều khoản sử dụng</a>
+                <a href="#">Về chúng tôi</a>
+            </div>
+            <div class="footer-section">
+                <h3>Theo dõi chúng tôi</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Dịch Vụ Vệ Sinh & Sửa Chữa - All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function getCookieValue(name) {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [key, val] = cookie.trim().split('=');
+                if (key === name) return decodeURIComponent(val);
+            }
+            return null;
+        }
+        let token = getCookieValue('token');
+        if (!token) {
+            alert('Bạn cần đăng nhập để xem lịch sử đặt dịch vụ!');
+            window.location.href = '/login';
+        }
+
+        let currentPage = 1;
+        const ordersPerPage = 5; // Số đơn hàng trên mỗi trang
+
+        // Hàm hiển thị trạng thái đơn hàng
+        function getStatusBadge(status) {
+            switch(status) {
+                case 'pending':
+                    return '<span class="order-status status-pending">Chờ xử lý</span>';
+                case 'in_progress':
+                    return '<span class="order-status status-in-progress">Đang thực hiện</span>';
+                case 'completed':
+                    return '<span class="order-status status-completed">Hoàn thành</span>';
+                default:
+                    return '<span class="order-status">Không xác định</span>';
+            }
+        }
+
+        // Hàm tạo form feedback
+        function createFeedbackForm(orderId) {
+            return `
+                <div class="feedback-form" data-order-id="${orderId}">
+                    <div class="rating">
+                        <i class="fas fa-star" data-rating="1"></i>
+                        <i class="fas fa-star" data-rating="2"></i>
+                        <i class="fas fa-star" data-rating="3"></i>
+                        <i class="fas fa-star" data-rating="4"></i>
+                        <i class="fas fa-star" data-rating="5"></i>
+                    </div>
+                    <textarea class="feedback-input" placeholder="Nhập đánh giá của bạn..."></textarea>
+                    <button class="submit-feedback" onclick="submitFeedback(${orderId})">Gửi đánh giá</button>
+                </div>
+            `;
+        }
+
+        // Hàm hiển thị admin reply
+        function showAdminReply(reply) {
+            return `
+                <div class="admin-reply">
+                    <p><span class="admin-name">Admin:</span> ${reply}</p>
+                </div>
+            `;
+        }
+
+        // Hàm tạo card đơn hàng
+        function createOrderCard(order) {
+            return `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-title">Đơn hàng #${order.id}</div>
+                        ${getStatusBadge(order.status)}
+                    </div>
+                    <div class="order-details">
+                        <p><strong>Dịch vụ:</strong> ${order.service_name}</p>
+                        <p><strong>Ngày thực hiện:</strong> ${order.implementing_date}</p>
+                        <p><strong>Nhân viên:</strong> ${order.employee_name || 'Chưa phân công'}</p>
+                        <p><strong>Số điện thoại nhân viên:</strong> ${order.employee_phone || '-'}</p>
+                        <p><strong>Địa chỉ:</strong> ${order.address}</p>
+                        <p><strong>Ghi chú:</strong> ${order.note || 'Không có'}</p>
+                    </div>
+                    ${order.status === 'completed' ? `
+                        <div class="feedback-section">
+                            ${order.feedback ? `
+                                <div class="user-feedback">
+                                    <p><strong>Đánh giá của bạn:</strong> ${order.feedback.rating}/5</p>
+                                    <p><strong>Nhận xét:</strong> ${order.feedback.comment}</p>
+                                    ${order.feedback.admin_reply ? showAdminReply(order.feedback.admin_reply) : ''}
+                                </div>
+                            ` : createFeedbackForm(order.id)}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Hàm load danh sách đơn hàng với phân trang
+        async function loadOrders(page = 1) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/user/orders/history?page=${page}&limit=${ordersPerPage}`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                const data = await response.json();
+                document.getElementById('notificationButton').style.display = 'flex'; // Ẩn nút thông báo nếu không có đơn hàng
+
+                const ordersList = document.getElementById('ordersList');
+                const pagination = document.getElementById('pagination');
+
+                if (data.orders.length === 0) {
+                    ordersList.innerHTML = '<div class="no-orders">Bạn chưa có đơn hàng nào</div>';
+                    pagination.innerHTML = '';
+                    return;
+                }
+
+                // Hiển thị danh sách đơn hàng
+                ordersList.innerHTML = data.orders.map(order => createOrderCard(order)).join('');
+
+                // Hiển thị thanh phân trang
+                const totalPages = data.totalPages; // Tổng số trang từ API
+                pagination.innerHTML = ''; // Xóa nội dung cũ của thanh phân trang
+                for (let i = 1; i <= totalPages; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = `pagination-btn ${i === page ? 'active' : ''}`;
+                    btn.innerText = i;
+                    btn.onclick = () => {
+                        currentPage = i;
+                        loadOrders(i); // Tải dữ liệu của trang được chọn
+                    };
+                    pagination.appendChild(btn);
+                }
+
+                // Thêm sự kiện cho các sao đánh giá
+                document.querySelectorAll('.rating i').forEach(star => {
+                  star.addEventListener('click', function () {
+                    const rating = this.dataset.rating;
+                    const stars = this.parentElement.querySelectorAll('i');
+
+                    // Reset tất cả sao
+                    stars.forEach(s => s.classList.remove('active'));
+
+                    // Gán active cho sao <= rating
+                    stars.forEach(s => {
+                      if (Number(s.dataset.rating) <= Number(rating)) {
+                        s.classList.add('active');
+                      }
+                    });
+                  });
+                });
+
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        // Hàm gửi feedback
+        async function submitFeedback(orderId) {
+            // Tìm đúng form feedback của đơn hàng này
+            const feedbackForm = document.querySelector(`.feedback-form[data-order-id="${orderId}"]`);
+            if (!feedbackForm) return;
+
+            // Lấy số sao trong form này
+            const rating = feedbackForm.querySelectorAll('.rating i.active').length;
+            const comment = feedbackForm.querySelector('.feedback-input').value;
+
+            if (!rating) {
+                alert('Vui lòng chọn số sao đánh giá!');
+                return;
+            }
+            try {
+                const response = await fetch('/api/feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        order_id: orderId,
+                        rating: parseInt(rating),
+                        comment
+                    })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Cảm ơn bạn đã đánh giá!');
+                    loadOrders(); // Load lại danh sách đơn hàng
+                } else {
+                    alert(result.error || 'Có lỗi xảy ra khi gửi đánh giá');
+                }
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                alert('Có lỗi xảy ra khi gửi đánh giá');
+            }
+        }
+
+        // Kiểm tra đăng nhập và hiển thị thông tin người dùng
+        async function checkLogin() {
+            if (!token) {
+                document.getElementById('loginRegisterNav').style.display = 'flex';
+                document.getElementById('userGreetingNav').style.display = 'none';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/user/profile', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                const data = await response.json();
+                
+                if (data.user) {
+                    document.getElementById('loginRegisterNav').style.display = 'none';
+                    document.getElementById('userGreetingNav').style.display = 'flex';
+                    document.getElementById('greetingText').innerText = `Xin chào, ${data.user.name}`;
+                    
+                    if (data.user.avatar_url) {
+                        document.getElementById('userAvatar').src = data.user.avatar_url;
+                    } else {
+                        document.getElementById('userAvatar').src = '/images/user/default-avatar.png';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('avatar');
+            window.location.href = '/';
+        }
+
+        // Load danh sách đơn hàng khi trang được tải
+        window.onload = function() {
+            checkLogin();
+            loadOrders(currentPage);
+        };
+    </script>
+</body>
+</html>
