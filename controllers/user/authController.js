@@ -20,6 +20,7 @@ const authController = {
                 process.env.ACCESS_SECRET_KEY,
                 { expiresIn: '1h' }
             );
+            res.cookie('token', token, { httpOnly: false });
             res.json({ token, role: user.role, username: user.username });
         } catch (err) {
             res.status(500).json({ error: "Lỗi server" });

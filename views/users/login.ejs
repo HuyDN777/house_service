@@ -173,7 +173,7 @@
           localStorage.setItem('username', msg.username);
           document.getElementById('msg').innerText = 'Đăng nhập thành công!';
           setTimeout(() => { 
-            if(msg.role === 'super_admin') window.location.href = '/admin/dashboard';
+            if(msg.role === 'super_admin') window.location.href = '/dashboard';
             else window.location.href = '/';
         }, 700);
         } else {

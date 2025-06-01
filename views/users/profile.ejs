@@ -430,7 +430,6 @@
                         document.getElementById('profileAvatar').src = uploadData.imageUrl;
                     }
                 } catch (error) {
-                    console.error('Lỗi khi upload ảnh:', error);
                     alert('Có lỗi xảy ra khi tải lên ảnh đại diện.');
                     return;
                 }
@@ -451,10 +450,9 @@
                     alert('Cập nhật thông tin thành công!');
                     loadUserInfo();
                 } else {
-                    alert('Có lỗi xảy ra khi cập nhật thông tin.');
+                    alert('Có lỗi xảy ra khi cập nhật.');
                 }
             } catch (error) {
-                console.error('Lỗi khi cập nhật profile:', error);
                 alert('Có lỗi xảy ra khi cập nhật thông tin.');
             }
         }
@@ -475,7 +473,7 @@
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        'Authorization': `Bearer ${getCookieValue('token')}`
                     },
                     body: JSON.stringify({
                         oldPassword: document.getElementById('currentPassword').value,

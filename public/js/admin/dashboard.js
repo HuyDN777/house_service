@@ -1,17 +1,17 @@
 async function fetchRevenueData() {
-    const response = await fetch('/api/admin/statistics/revenue');
+    const response = await fetch('/admin/statistics/revenue');
     const data = await response.json();
     return data.data;
 }
 
 async function fetchOrderStatusData() {
-    const response = await fetch('/api/admin/statistics/orders');
+    const response = await fetch('/admin/statistics/orders');
     const data = await response.json();
     return data.data;
 }
 
 async function fetchPopularServicesData() {
-    const response = await fetch('/api/admin/statistics/popular-services');
+    const response = await fetch('/admin/statistics/popular-services');
     const data = await response.json();
     return data.data;
 }

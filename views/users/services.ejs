@@ -123,13 +123,13 @@
     let totalPages = 1;
 
     function getCookieValue(name) {
-            const cookies = document.cookie.split(';');
-            for (let cookie of cookies) {
-                const [key, val] = cookie.trim().split('=');
-                if (key === name) return decodeURIComponent(val);
-            }
-            return null;
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [key, val] = cookie.trim().split('=');
+            if (key === name) return decodeURIComponent(val);
         }
+        return null;
+    }
 
     function getQueryParam(name, defaultValue) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -266,7 +266,7 @@
         e.preventDefault();
 
         const keyword = document.getElementById("keyword").value;
-        const category = document.getElementById("category").value;
+        // const category = document.getElementById("category").value;
         const minPrice = document.getElementById("minPrice").value;
         const maxPrice = document.getElementById("maxPrice").value;
         const page = document.getElementById("page").value;
@@ -274,7 +274,7 @@
 
         const query = new URLSearchParams({
             keyword,
-            category,
+            // category,
             minPrice,
             maxPrice,
             page,

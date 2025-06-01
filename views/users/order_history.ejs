@@ -400,7 +400,6 @@
         // Hàm load danh sách đơn hàng với phân trang
         async function loadOrders(page = 1) {
             try {
-                const token = localStorage.getItem('token');
                 const response = await fetch(`/api/user/orders/history?page=${page}&limit=${ordersPerPage}`, {
                     headers: {
                         'Authorization': 'Bearer ' + token
