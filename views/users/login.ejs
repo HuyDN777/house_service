@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập</title>
-    <link rel="stylesheet" href="/css/user/home.css">
-    <link rel="stylesheet" href="/css/user/login.css">
     <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/user/home.css">
+    <link rel="stylesheet" href="/css/user/login.css">
     <style>
       .login-section {margin-top:85px; min-height:700px; display:flex; justify-content:center; align-items:center; background:linear-gradient(180deg,#026204 0%,#268728 100%);}
       .login-form-box {background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); padding:36px 32px; width:420px; max-width:95vw;}
@@ -26,29 +27,7 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <img src="images/user/logo.png" alt="Dọn Nhà Vui" class="logo">
-        <nav class="nav">
-            <a href="/home">TRANG CHỦ</a>
-            <a href="/services">DỊCH VỤ</a>
-            <a href="#contact">LIÊN HỆ</a>
-        </nav>
-        <nav class="login-register" id="loginRegisterNav">
-            <a href="/login" class="login-btn">ĐĂNG NHẬP</a>
-            <a href="/register" class="register-btn">ĐĂNG KÝ</a>
-        </nav>
-        <nav class="user-greeting" id="userGreetingNav" style="display:none;">
-            <a href="/profile" class="profile-link">
-                <img src="" alt="Avatar" id="userAvatar" class="avatar">
-                <span id="greetingText"></span>
-            </a>
-            <a href="/order-history" class="btn" id="orderHistoryBtn">Lịch sử đặt dịch vụ</a>
-            <a href="/admin/dashboard" class="btn" id="adminNavBtn" style="display:none;">Quản trị</a>
-            <form action="/logout" method="post" style="display:inline;">
-                <button type="submit" class="logout-btn" onclick="logout()">Đăng xuất</button>
-            </form>
-        </nav>
-    </header>
+    <%- include('../layouts/header'); -%>
     <main>
         <section class="login-section">
             <form id="loginForm" class="login-form-box">
@@ -75,17 +54,7 @@
              </form>
         </section>
     </main>
-    <section class="footer">
-        <div class="footer-content">
-            <p>SĐT: 0123456789</p>
-            <div class="footer-links">
-                <a href="#">Chính sách</a> | 
-                <a href="#">Điều khoản sử dụng</a> | 
-                <a href="#">Về chúng tôi</a>
-            </div>
-            <p>© 2025 Dịch Vụ Vệ Sinh & Sửa Chữa - All Rights Reserved.</p>
-        </div>
-    </section>
+    <%- include('../layouts/footer'); -%>
 
     <!-- Modal Quên mật khẩu -->
     <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">

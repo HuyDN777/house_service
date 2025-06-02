@@ -1,0 +1,23 @@
+<header class="header">
+    <img src="images/user/logo.png" alt="Dọn Nhà Vui" class="logo">
+    <nav class="nav">
+        <a href="/home">TRANG CHỦ</a>
+        <a href="/services">DỊCH VỤ</a>
+        <a href="#contact">LIÊN HỆ</a>
+    </nav>
+    <nav class="login-register" id="loginRegisterNav">
+        <a href="/login" class="login-btn">ĐĂNG NHẬP</a>
+        <a href="/register" class="register-btn">ĐĂNG KÝ</a>
+    </nav>
+    <nav class="user-greeting" id="userGreetingNav" style="display:none;">
+        <a href="/profile" class="profile-link">
+            <img src="" alt="Avatar" id="userAvatar" class="avatar">
+            <span id="greetingText"></span>
+        </a>
+        <a href="/order-history" class="btn" id="orderHistoryBtn" style="text-decoration: none;">Lịch sử đặt dịch vụ</a>
+        <a href="/admin/dashboard" class="btn" id="adminNavBtn" style="display:none;">Quản trị</a>
+        <form action="/logout" method="post" style="display:inline;">
+            <button type="submit" class="logout-btn" onclick="logout()">Đăng xuất</button>
+        </form>
+    </nav>
+</header>

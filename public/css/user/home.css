@@ -327,6 +327,12 @@ body {
     margin-bottom: 0.5rem;
 }
 
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
 .social-links {
     display: flex;
     gap: 1rem;
@@ -336,11 +342,6 @@ body {
     font-size: 1.5rem;
 }
 
-.footer-bottom {
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255,255,255,0.1);
-}
 
 /* Admin Button */
 .btn-admin {
