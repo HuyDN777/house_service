@@ -16,6 +16,11 @@ const Promotion = {
         return rows[0];
     },
 
+    async findPromotionAvailable() {
+        const [rows] = await db.query("SELECT * FROM promotion WHERE NOW() BETWEEN start_date AND end_date");
+        return rows;
+    },
+
     async totalPromotions() {
         const [rows] = await db.query("SELECT COUNT(*) as total FROM promotion");
         return rows[0].total;

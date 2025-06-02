@@ -35,6 +35,11 @@ const promotionController = {
             console.error(err);
             res.status(500).json({ error: "Lỗi khi xóa khuyến mãi" });
         }
+    }, 
+
+    async getPromotionAvailable(req, res) {
+        const couponsAvailable = await Promotion.findPromotionAvailable();
+        res.json({ coupons: couponsAvailable});
     }
 };
 

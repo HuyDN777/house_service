@@ -6,6 +6,7 @@ const serviceController = require("../controllers/user/serviceController");
 const profileController = require("../controllers/user/profileController");
 const feedbackController = require("../controllers/user/feedbackController");
 const authController = require("../controllers/user/authController");
+const promotionController = require("../controllers/admin/promotionController");
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 app.use(express.json());
@@ -57,5 +58,5 @@ app.get("/api/services/search", serviceController.search);
 app.post('/api/user/forgot-password', profileController.forgotPassword);
 app.post('/api/user/verify-otp', profileController.verifyOTP);
 app.post('/api/user/reset-password', profileController.resetPassword);
-
+app.get('/api/coupons', promotionController.getPromotionAvailable);
 module.exports = app;

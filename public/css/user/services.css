@@ -285,7 +285,7 @@ body {
 
 .service-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 366px));
     gap: 30px;
     padding: 20px;
     max-width: 1200px;
@@ -318,14 +318,17 @@ body {
 }
 
 .service-card button {
-    width: 100%;
-    padding: 12px;
+    width: 70%; /* Để kích thước nút vừa với nội dung */
+    padding: 8px 16px; /* Giảm padding để nút nhỏ hơn */
     background: #026204;
     color: white;
     border: none;
+    border-radius: 8px; /* Bo góc nút */
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px; /* Giảm kích thước chữ */
     transition: background 0.2s;
+    display: block; /* Để căn giữa */
+    margin: 28px auto; /* Căn giữa nút */
 }
 
 .service-card button:hover {
@@ -333,17 +336,17 @@ body {
 }
 
 .modal {
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0,0,0,0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: center; /* căn giữa ngang */
+  align-items: center;     /* căn giữa dọc */
+  background-color: rgba(0, 0, 0, 0.4); /* nền mờ */
+  z-index: 9999;
 }
+
 
 .modal-content {
     background: white;
@@ -545,10 +548,6 @@ body {
 
     .social-links {
         justify-content: center;
-    }
-
-    .service-grid {
-        grid-template-columns: 1fr;
     }
 }
 
