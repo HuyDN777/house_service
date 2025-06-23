@@ -14,7 +14,6 @@ const authController = {
                 return res.status(401).json({ error: "Sai tài khoản hoặc mật khẩu" });
             }
             const employee = rows[0];
-            // So sánh password (nếu đã hash thì dùng bcrypt.compare)
             if (employee.password !== password) {
                 return res.status(401).json({ error: "Sai tài khoản hoặc mật khẩu" });
             }

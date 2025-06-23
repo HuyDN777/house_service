@@ -1,11 +1,12 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const User = require('../models/User');
 
 // Cấu hình Google OAuth
 passport.use(   
     new GoogleStrategy({
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        clientID: '27216481304-5v69keq2qg70kbi9sf5hfppfcd13rcfg.apps.googleusercontent.com',
+        clientSecret: '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',
         callbackURL: "http://localhost:3000/auth/google/callback"
     }, 
     async (accessToken, refreshToken, profile, done) => {

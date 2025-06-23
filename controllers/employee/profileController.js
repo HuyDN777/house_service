@@ -1,5 +1,4 @@
 const db = require('../../config/database');
-const { update } = require('../../models/Service');
 const nodemailer = require('nodemailer');
 
 const profileController = {
@@ -108,7 +107,6 @@ const profileController = {
     
             res.json({ message: "OTP đã được gửi đến email của bạn." });
         } catch (err) {
-            console.error(err);
             res.status(500).json({ error: "Lỗi khi gửi OTP." });
         }
     },

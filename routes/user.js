@@ -12,8 +12,8 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.post('/api/register', authController.register);
 app.post('/api/login', authController.login);
-
 app.get("/", (req, res) => { 
     res.render("users/home", { 
         title: "Home", 

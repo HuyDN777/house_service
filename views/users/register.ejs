@@ -123,7 +123,7 @@
             email: form.email.value,
             avatar_url
         };
-        const res = await fetch('/user/register', {
+        const res = await fetch('/api/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)

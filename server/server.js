@@ -2,42 +2,12 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const morgan = require("morgan");
-const ejs = require("ejs");
-const mysql = require("mysql2/promise");
-const multer = require('multer');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const jwt = require('jsonwebtoken');
-const { ROLES, PERMISSIONS, checkPermission, checkRole } = require('../middleware/roles');
-const serviceController = require("../controllers/admin/serviceController");
-const categoryController = require("../controllers/admin/categoryController");
-const userController = require("../controllers/admin/userController");
-const userAuthController = require("../controllers/user/authController");
-const employeeController = require("../controllers/admin/employeeController");
-const promotionController = require("../controllers/admin/promotionController");
-const billController = require("../controllers/admin/billController");
-const feedbackController = require("../controllers/admin/feedbackController");
-const orderController = require('../controllers/admin/orderController');
-const profileController = require('../controllers/user/profileController');
-const Feedback = require('../models/Feedback');
-const authenticateAdminToken  = require("../middleware/authAdmin");
-const { authenticateToken: authenticateUserToken, authenticateTokenWithHeader } = require("../middleware/authUser")
-const authenticateEmployeeToken = require("../middleware/authEmployee");
-const { VNPay, ignoreLogger, ProductCode, VnpLocale, dateFormat, consoleLogger } = require('vnpay');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
-const User = require('../models/User');
-const nodemailer = require('nodemailer');
-const axios = require('axios');
-const orderUserController = require('../controllers/user/orderController');
-const feedbackUserController = require('../controllers/user/feedbackController');
-const serviceUserController = require('../controllers/user/serviceController');
-const employeeAuthController = require('../controllers/employee/authController');
-const profileEmployeeController = require('../controllers/employee/profileController');
-const orderEmployeeController = require('../controllers/employee/orderController');
-const statisticsController = require('../controllers/admin/statisticsController');
 const { upload } = require('../config/cloudinary');
+require('../config/googleAuth');
 
 
 const adminRoutes = require('../routes/admin');
@@ -81,7 +51,6 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
             process.env.ACCESS_SECRET_KEY,
             { expiresIn: '1h' }
         );
-        console.log("Avatar URL: ", req.user.avatar_url);
         res.cookie('token', token, {
             httpOnly: false, 
             secure: process.env.NODE_ENV === 'production', 
@@ -92,14 +61,6 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
         res.redirect("/home");
     }
 );
-
-// Kết nối MySQL
-const db = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'admin',
-    database: 'houseservicedb' 
-});
 
 // EJS và middleware
 app.set("view engine", "ejs");

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title>Hệ thống nhân viên</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         .avatar {
@@ -118,9 +118,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         async function loadOrders() {
-            const response = await fetch('/api/employee/orders', {
-                headers: { 'Authorization': `Bearer ${document.cookie.split('=')[1]}` }
-            });
+            const response = await fetch('/employee/api/orders');
             if (!response.ok) {
                 alert('Không thể tải đơn hàng. Vui lòng thử lại sau.');
                 return;
@@ -148,7 +146,7 @@
 
         async function completeOrder(orderId) {
             if (!confirm('Bạn chắc chắn muốn đánh dấu hoàn thành đơn này?')) return;
-            const res = await fetch(`/api/orders/${orderId}/complete`, {
+            const res = await fetch(`/employee/api/orders/${orderId}/complete`, {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${document.cookie.split('=')[1]}` }
             });
@@ -159,14 +157,12 @@
 
         function logout() {
             document.cookie = 'token=; Max-Age=0; path=/;';
-            window.location.href = '/employee';
+            window.location.href = '/employee/login';
         }
 
         async function showProfile() {
             try {
-                const res = await fetch('/api/employee/profile', {
-                    headers: { 'Authorization': `Bearer ${document.cookie.split('=')[1]}` }
-                });
+                const res = await fetch('/employee/api/profile');
 
                 if (res.ok) {
                     const data = await res.json();
@@ -237,13 +233,19 @@
             }
 
             // Gửi thông tin cá nhân và URL avatar đến API profile-update
-            const res = await fetch('/api/employee/profile-update', {
+            const res = await fetch('/employee/api/profile-update', {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${document.cookie.split('=')[1]}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ name, username, email, phone, address, avatar_url: avatarUrl })
+                body: JSON.stringify({
+                    name,
+                    username,
+                    email,
+                    phone,
+                    address,
+                    avatar_url: avatarUrl
+                })
             });
 
             if (res.ok) {
@@ -261,9 +263,7 @@
             }
 
             // Làm mới thông tin người dùng sau khi cập nhật
-            const refreshRes = await fetch('/api/employee/profile', {
-                headers: { 'Authorization': `Bearer ${document.cookie.split('=')[1]}` }
-            });
+            const refreshRes = await fetch('/employee/api/profile');
             if (refreshRes.ok) {
                 const updatedData = await refreshRes.json();
                 document.querySelector('.avatar').src = `${updatedData.profile_image_url}?t=${Date.now()}`;
@@ -282,13 +282,15 @@
                 return;
             }
 
-            const res = await fetch('/api/employee/change-password', {
+            const res = await fetch('/employee/api/change-password', {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${document.cookie.split('=')[1]}`,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ currentPassword, newPassword })
+                body: JSON.stringify({
+                    currentPassword,
+                    newPassword
+                })
             });
 
             if (res.ok) {
@@ -302,7 +304,7 @@
 
         window.onload = async () => {
             try {
-                const res = await fetch('/api/employee/profile', {
+                const res = await fetch('/employee/api/profile', {
                     headers: { 'Authorization': `Bearer ${document.cookie.split('=')[1]}` }
                 });
 
