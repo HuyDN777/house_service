@@ -8,7 +8,17 @@ body {
     background: #f8f9fa;
     font-family: 'Kodchasan', sans-serif !important;
 }
+.logout-btn {
+    font-family: 'Kodchasan', sans-serif !important;
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 270px;
+}
 .sidebar {
+    position: fixed;;
     width: 250px;
     background: #2e7d32;
     color: white;
@@ -30,7 +40,7 @@ body {
 }
 .content {
     flex: 1;
-    padding: 20px;
+    padding: 30px 20px 30px 320px;
 }
 .table-container {
     width: 100%;

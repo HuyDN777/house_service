@@ -216,21 +216,21 @@
             }
         }
 
-        function logout() {
-            // Xóa token trong localStorage
-            localStorage.removeItem('token');
-            // Xóa cookie token
-            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            // Gửi yêu cầu đăng xuất đến server
-            fetch('/logout', { method: 'GET' })
-                .then(() => {
-                    // Cập nhật giao diện về trạng thái chưa đăng nhập
-                    toggleLoginState(false);
-                    // Tải lại trang hoặc chuyển hướng
-                    window.location.href = '/';
-                })
-                .catch(err => console.error('Lỗi khi đăng xuất:', err));
-        }
+        // function logout() {
+        //     // Xóa token trong localStorage
+        //     localStorage.removeItem('token');
+        //     // Xóa cookie token
+        //     document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        //     // Gửi yêu cầu đăng xuất đến server
+        //     fetch('/logout', { method: 'GET' })
+        //         .then(() => {
+        //             // Cập nhật giao diện về trạng thái chưa đăng nhập
+        //             toggleLoginState(false);
+        //             // Tải lại trang hoặc chuyển hướng
+        //             window.location.href = '/';
+        //         })
+        //         .catch(err => console.error('Lỗi khi đăng xuất:', err));
+        // }
 
         // Load testimonials
         // async function loadTestimonials() {

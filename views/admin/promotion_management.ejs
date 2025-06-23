@@ -6,6 +6,7 @@
   <title>Quản lý Mã khuyến mãi</title>
   <link rel="stylesheet" href="/css/admin/services_management.css" />
   <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
   <style>
     .modal {
       display: none;
@@ -47,21 +48,28 @@
 </head>
 <body>
   <div class="sidebar">
-    <h2>Admin Panel</h2>
-    <ul>
-      <li><a href="/admin/dashboard">📊 Dashboard</a></li>
-      <li><a href="/admin/orders?page=1&pageSize=10">📅 Quản lý đơn hàng</a></li>
-      <li><a href="/admin/services?page=1&pageSize=10">🛠 Quản lý dịch vụ</a></li>
-      <li><a href="/admin/user?page=1&pageSize=10">👥 Quản lý người dùng</a></li>
-      <li><a href="/admin/categories?page=1&pageSize=10">📂 Quản lý danh mục</a></li>
-      <li><a href="/admin/employees?page=1&pageSize=10">👨‍🔧 Quản lý nhân viên</a></li>
-      <li><a href="/admin/coupons?page=1&pageSize=10">🏷 Quản lý mã khuyến mãi</a></li>
-      <li><a href="/admin/bills?page=1&pageSize=10">💵 Quản lý hóa đơn</a></li>
-      <li><a href="/admin/feedback?page=1&pageSize=10">⭐ Quản lý đánh giá</a></li>
-    </ul>
-  </div>
+        <h2>Admin Panel</h2>
+        <ul>
+            <li><a href="/admin/dashboard">📊 Dashboard</a></li>
+            <li><a href="/admin/orders?page=1&pageSize=10">📅 Quản lý đơn hàng</a></li>
+            <li><a href="/admin/services?page=1&pageSize=10">🛠 Quản lý dịch vụ</a></li>
+            <li><a href="/admin/user?page=1&pageSize=10">👥 Quản lý người dùng</a></li>
+            <li><a href="/admin/categories?page=1&pageSize=10">📂 Quản lý danh mục</a></li>
+            <li><a href="/admin/employees?page=1&pageSize=10">👨‍🔧 Quản lý nhân viên</a></li>
+            <li><a href="/admin/coupons?page=1&pageSize=10">🏷 Quản lý mã khuyến mãi</a></li>
+            <li><a href="/admin/bills?page=1&pageSize=10">💵 Quản lý hóa đơn</a></li>
+            <li><a href="/admin/feedback?page=1&pageSize=10">⭐ Quản lý đánh giá</a></li>
+            <li>
+                <form action="/logout" method="POST" style="margin: 0;">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+                </form>
+            </li>
+        </ul>
+    </div>
   <div class="container">
-    <h1>Quản lý Mã khuyến mãi</h1>
+    <h1>Quản lý mã khuyến mãi</h1>
     <form method="get" style="display:inline;" id="pageSizeForm">
         <input type="hidden" name="page" value="<%= page %>">
         <input type="hidden" name="token" value="<%= token %>">
@@ -161,11 +169,11 @@
 
     <div class="pagination">
       <% if (page > 1) { %>
-          <a href="?page=<%= page - 1 %>&pageSize=<%= pageSize %>">Trang trước</a>
+          <a href="?page=<%= page - 1 %>&pageSize=<%= pageSize %>" style="text-decoration: none;">Trang trước</a>
       <% } %>
       <span>Trang <%= page %> / <%= totalPages %></span>
       <% if (page < totalPages) { %>
-          <a href="?page=<%= page + 1 %>&pageSize=<%= pageSize %>">Trang sau</a>
+          <a href="?page=<%= page + 1 %>&pageSize=<%= pageSize %>" style="text-decoration: none;">Trang sau</a>
       <% } %>
   </div>
   </div>

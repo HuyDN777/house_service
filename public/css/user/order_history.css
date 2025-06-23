@@ -1,0 +1,231 @@
+.pagination-button {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 0 5px;
+    background: #026204;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+}
+.pagination-button:hover {
+    background: #268728;
+}
+.history-container {
+    max-width: 1000px;
+    margin: 120px auto 50px;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #026204;
+    text-decoration: none;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+.back-link:hover {
+    color: #268728;
+}
+.page-title {
+    color: #026204;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+.order-card {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+}
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.order-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #026204;
+}
+.order-status {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 500;
+}
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+.status-in-progress {
+    background: #cce5ff;
+    color: #004085;
+}
+.status-completed {
+    background: #d4edda;
+    color: #155724;
+}
+.order-details {
+    margin-bottom: 15px;
+}
+.order-details p {
+    margin: 5px 0;
+    color: #333;
+}
+.note {
+    overflow: auto;
+}
+.feedback-section {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+}
+.feedback-form {
+    margin-top: 10px;
+}
+.rating {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+.rating i {
+    color: #ddd;
+    cursor: pointer;
+    font-size: 20px;
+}
+.rating i.active {
+    color: #ffc107;
+}
+.feedback-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    resize: vertical;
+}
+.submit-feedback {
+    background: #026204;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.submit-feedback:hover {
+    background: #268728;
+}
+.admin-reply {
+    background: #e9ecef;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+.admin-reply p {
+    margin: 5px 0;
+    color: #495057;
+}
+.admin-reply .admin-name {
+    font-weight: bold;
+    color: #026204;
+}
+.no-orders {
+    text-align: center;
+    color: #666;
+    padding: 30px;
+}
+.pagination-container {
+    margin-top: 20px;
+    text-align: center;
+}
+/* .pagiackground:{
+    #268728;
+} */
+.pagination-info {
+    margin-top: 10px;
+    color: #333;
+}
+.pagination-btn {
+    background: none;
+    border: none;
+    color: #026204;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 4px;
+}
+.pagination-btn:hover {
+    background: #f1f1f1;
+}
+.pagination-btn.active {
+    background: #026204;
+    color: white;
+}
+#notificationButton {
+    position: fixed; /* Đặt nút ở vị trí cố định */
+    bottom: 20px; /* Cách đáy 20px */
+    right: 20px; /* Cách phải 20px */
+    background-color: #007bff; /* Màu nền */
+    color: white; /* Màu chữ */
+    border: none; /* Xóa viền */
+    border-radius: 50%; /* Bo tròn nút */
+    width: 40px; /* Chiều rộng nhỏ hơn */
+    height: 40px; /* Chiều cao nhỏ hơn */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; /* Con trỏ chuột */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+    z-index: 1000; /* Đảm bảo nút nằm trên các phần tử khác */
+    font-size: 16px; /* Kích thước biểu tượng nhỏ hơn */
+}
+
+#notificationButton:hover {
+    background-color: #0056b3; /* Màu nền khi hover */
+}
+#notifications {
+    position: fixed;
+    bottom: 80px; /* Cách nút thông báo 80px */
+    right: 20px; /* Cách phải 20px */
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none; /* Ẩn mặc định */
+}
+
+#notifications h2 {
+    font-size: 16px;
+    margin: 10px;
+    color: #333;
+}
+
+#notifications ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#notifications li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
+}
+
+#notifications li:last-child {
+    border-bottom: none;
+}

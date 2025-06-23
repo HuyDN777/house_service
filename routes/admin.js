@@ -14,7 +14,7 @@ const statisticsController = require("../controllers/admin/statisticsController"
 
 
 app.post('/api/login', authController.login);
-app.get("/dashboard", (req, res) => {
+app.get("/dashboard", authenticate, (req, res) => {
     res.render("admin/dashboard");
 });
 app.get("/categories", authenticate, categoryController.getAllCategories);

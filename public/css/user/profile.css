@@ -532,3 +532,25 @@ body {
     display: block;
     margin-bottom: 0.5rem;
 }
+#notificationButton {
+    position: fixed; /* Đặt nút ở vị trí cố định */
+    bottom: 20px; /* Cách đáy 20px */
+    right: 20px; /* Cách phải 20px */
+    background-color: #007bff; /* Màu nền */
+    color: white; /* Màu chữ */
+    border: none; /* Xóa viền */
+    border-radius: 50%; /* Bo tròn nút */
+    width: 40px; /* Chiều rộng nhỏ hơn */
+    height: 40px; /* Chiều cao nhỏ hơn */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; /* Con trỏ chuột */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+    z-index: 1000; /* Đảm bảo nút nằm trên các phần tử khác */
+    font-size: 16px; /* Kích thước biểu tượng nhỏ hơn */
+}
+
+#notificationButton:hover {
+    background-color: #0056b3; /* Màu nền khi hover */
+}

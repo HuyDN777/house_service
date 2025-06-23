@@ -6,6 +6,7 @@
     <title>Quản lý đơn hàng</title>
     <link rel="stylesheet" href="/css/admin/order.css">
     <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
 </head>
 <body>
     <div class="sidebar">
@@ -20,10 +21,17 @@
             <li><a href="/admin/coupons?page=1&pageSize=10">🏷 Quản lý mã khuyến mãi</a></li>
             <li><a href="/admin/bills?page=1&pageSize=10">💵 Quản lý hóa đơn</a></li>
             <li><a href="/admin/feedback?page=1&pageSize=10">⭐ Quản lý đánh giá</a></li>
+            <li>
+                <form action="/logout" method="POST" style="margin: 0;">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+                </form>
+            </li>
         </ul>
     </div>
     <div class="content">
-        <h1>Quản lý Đơn hàng</h1>
+        <h1>Quản lý đơn hàng</h1>
         <form method="get" style="display:inline;" id="pageSizeForm">
             <input type="hidden" name="page" value="<%= page %>">
             <label for="pageSize">Số dòng/trang:</label>
@@ -69,11 +77,11 @@
         </div>
         <div class="pagination">
             <% if (page > 1) { %>
-                <a href="?page=<%= page - 1 %>&pageSize=<%= pageSize %>">Trang trước</a>
+                <a href="?page=<%= page - 1 %>&pageSize=<%= pageSize %>", style="text-decoration: none;">Trang trước</a>
             <% } %>
             <span>Trang <%= page %> / <%= totalPages %></span>
             <% if (page < totalPages) { %>
-                <a href="?page=<%= page + 1 %>&pageSize=<%= pageSize %>">Trang sau</a>
+                <a href="?page=<%= page + 1 %>&pageSize=<%= pageSize %>" style="text-decoration: none;">Trang sau</a>
             <% } %>
         </div>
     </div>

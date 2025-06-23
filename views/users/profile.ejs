@@ -23,7 +23,9 @@
                 <span id="greetingText"></span>
             </a>
             <a href="/order-history" class="btn">Lịch sử đặt dịch vụ</a>
-            <button onclick="logout()" class="logout-btn">Đăng xuất</button>
+            <form action="/logout" method="post" style="display:inline;">
+                <button type="submit" class="logout-btn">Đăng xuất</button>
+            </form>
         </nav>
     </header>
 
@@ -122,6 +124,9 @@
             </div>
         </div>
     </main>
+    <button id="notificationButton" style="display: flex;">
+        <i class="fas fa-bell"></i>
+    </button>
     <%- include('../layouts/footer'); -%>
 
     <script>
@@ -536,13 +541,6 @@
             setTimeout(() => {
                 notificationBox.style.display = 'none';
             }, 4000);
-        }
-
-        function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('username');
-            localStorage.removeItem('avatar');
-            window.location.href = '/';
         }
 
         window.onload = function() {

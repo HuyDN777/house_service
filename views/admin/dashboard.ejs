@@ -6,6 +6,8 @@
     <title>Thống Kê Admin</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="/css/admin/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
 </head>
 <body>
     <div class="sidebar">
@@ -20,6 +22,13 @@
             <li><a href="/admin/coupons?page=1&pageSize=10">🏷 Quản lý mã khuyến mãi</a></li>
             <li><a href="/admin/bills?page=1&pageSize=10">💵 Quản lý hóa đơn</a></li>
             <li><a href="/admin/feedback?page=1&pageSize=10">⭐ Quản lý đánh giá</a></li>
+            <li>
+                <form action="/logout" method="POST" style="margin: 0;">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+                </form>
+            </li>
         </ul>
     </div>
     <div class="content">

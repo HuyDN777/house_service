@@ -5,10 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lịch sử đặt dịch vụ - Dọn Nhà Vui</title>
     <link rel="stylesheet" href="/css/user/services.css">
+    <link rel="stylesheet" href="/css/user/order_history.css">
     <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
-    <style>
-        .history-container {
+    <!-- <style>
+        nation-button {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 0 5px;
+            background: #026204;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        .pagination-button:hover {
+            b.history-container {
             max-width: 1000px;
             margin: 120px auto 50px;
             padding: 30px;
@@ -78,6 +89,9 @@
             margin: 5px 0;
             color: #333;
         }
+        .note {
+            overflow: auto;
+        }
         .feedback-section {
             margin-top: 15px;
             padding-top: 15px;
@@ -141,17 +155,7 @@
             margin-top: 20px;
             text-align: center;
         }
-        .pagination-button {
-            display: inline-block;
-            padding: 10px 15px;
-            margin: 0 5px;
-            background: #026204;
-            color: white;
-            border-radius: 4px;
-            text-decoration: none;
-        }
-        .pagination-button:hover {
-            background: #268728;
+        .pagiackground: #268728;
         }
         .pagination-info {
             margin-top: 10px;
@@ -238,7 +242,7 @@
             right: 20px; /* Cách phải 20px */
             bottom: auto; /* Xóa khoảng cách đáy */
         }
-    </style>
+    </style> -->
 </head>
 <body>
     <header class="header">
@@ -258,7 +262,9 @@
                 <span id="greetingText"></span>
             </a>
             <a href="/order-history" class="btn" id="orderHistoryBtn" style="text-decoration: none;">Lịch sử đặt dịch vụ</a>
-            <button onclick="logout()" class="logout-btn">Đăng xuất</button>
+            <form action="/logout" method="post" style="display:inline;">
+                <button type="submit" class="logout-btn">Đăng xuất</button>
+            </form>
         </nav>
     </header>
 
@@ -277,7 +283,7 @@
             <!-- Nút phân trang sẽ được thêm vào đây -->
         </div>
     </div>
-    <button id="notificationButton" style="display: none;">
+    <button id="notificationButton" style="display: flex;">
         <i class="fas fa-bell"></i>
     </button>
 
@@ -380,7 +386,7 @@
                         <p><strong>Nhân viên:</strong> ${order.employee_name || 'Chưa phân công'}</p>
                         <p><strong>Số điện thoại nhân viên:</strong> ${order.employee_phone || '-'}</p>
                         <p><strong>Địa chỉ:</strong> ${order.address}</p>
-                        <p><strong>Ghi chú:</strong> ${order.note || 'Không có'}</p>
+                        <p class="note"><strong>Ghi chú:</strong> ${order.note || 'Không có'}</p>
                     </div>
                     ${order.status === 'completed' ? `
                         <div class="feedback-section">
@@ -406,7 +412,6 @@
                     }
                 });
                 const data = await response.json();
-                document.getElementById('notificationButton').style.display = 'flex'; // Ẩn nút thông báo nếu không có đơn hàng
 
                 const ordersList = document.getElementById('ordersList');
                 const pagination = document.getElementById('pagination');
@@ -528,13 +533,6 @@
             } catch (error) {
                 console.error('Error loading user info:', error);
             }
-        }
-
-        function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('username');
-            localStorage.removeItem('avatar');
-            window.location.href = '/';
         }
 
         // Load danh sách đơn hàng khi trang được tải

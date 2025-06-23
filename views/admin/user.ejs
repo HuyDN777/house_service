@@ -6,6 +6,7 @@
     <title>Quản lý người dùng</title>
     <link rel="stylesheet" href="/css/admin/user.css">
     <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
 </head>
 <body>
     <div class="sidebar">
@@ -20,7 +21,14 @@
             <li><a href="/admin/coupons?page=1&pageSize=10">🏷 Quản lý mã khuyến mãi</a></li>
             <li><a href="/admin/bills?page=1&pageSize=10">💵 Quản lý hóa đơn</a></li>
             <li><a href="/admin/feedback?page=1&pageSize=10">⭐ Quản lý đánh giá</a></li>
-          </ul>
+            <li>
+                <form action="/logout" method="POST" style="margin: 0;">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>  Đăng xuất
+                </button>
+                </form>
+            </li>
+        </ul>
     </div>
     <div class="content">
         <h1>Quản lý người dùng</h1>
@@ -54,7 +62,7 @@
                             <td><%= user.address %></td>
                             <td><%= user.phone %></td>
                             <td><%= user.email %></td>
-                            <td><a href="<%= user.avatar_url %>" target="_blank">Xem ảnh</a></td>
+                            <td><a href="<%= user.avatar_url %>" target="_blank" style="text-decoration: none;">Xem ảnh</a></td>
                         </tr>
                     <% }) %>
                 </tbody>
@@ -62,11 +70,11 @@
         </div>
         <div class="pagination">
             <% if (page > 1) { %>
-                <a href="?page=<%= page - 1 %>&pageSize=<%= pageSize %>&token=<%= token %>">Trang trước</a>
+                <a href="?page=<%= page - 1 %>&pageSize=<%= pageSize %>&token=<%= token %>" style="text-decoration: none;">Trang trước</a>
             <% } %>
             <span>Trang <%= page %> / <%= totalPages %></span>
             <% if (page < totalPages) { %>
-                <a href="?page=<%= page + 1 %>&pageSize=<%= pageSize %>&token=<%= token %>">Trang sau</a>
+                <a href="?page=<%= page + 1 %>&pageSize=<%= pageSize %>&token=<%= token %>" style="text-decoration: none;">Trang sau</a>
             <% } %>
         </div>
         <button class="btn-add">Thêm Người Dùng</button>
